@@ -1,0 +1,11 @@
+{
+    "java.project.sourcePaths": [
+        "src",
+        ""
+    ],
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\adoni\\Downloads\\postgresql-42.7.0.jar",
+        "c:\\Users\\adoni\\Downloads\\Session 04 - Automne (Sep - Dec 2023)\\postgresql-42.7.0.jar"
+    ]
+}
