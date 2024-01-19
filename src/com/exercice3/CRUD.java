@@ -1,5 +1,4 @@
 package com.exercice3;
-
 import com.exercice2.Conn;
 import com.exercice1.NomExists;
 
@@ -183,5 +182,4 @@ public class CRUD {
         return resultString.toString();
     }
 
-    
 }

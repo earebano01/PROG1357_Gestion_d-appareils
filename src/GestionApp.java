@@ -58,7 +58,7 @@ public class GestionApp {
 
                         String nomToDelete = in.nextLine();
                         if (!NomExists.nomExists(nomToDelete)) {
-                            System.out.println("appareil inexistant. La mise a jour a echoue.");
+                            System.out.println("Appareil inexistant. La mise a jour a echoue.");
                         } else {
                         CRUD.deleteData(nomToDelete);
                         }
@@ -70,7 +70,7 @@ public class GestionApp {
                         String oldnom = in.nextLine();
 
                         if (!NomExists.nomExists(oldnom)) {
-                            System.out.println("appareil inexistant. La mise a jour a echoue.");
+                            System.out.println("Appareil inexistant. La mise a jour a echoue.");
                         } else {
                             String newNom = Validation.nomInput(in);
                             String newdeviceid = Validation.deviceIDInput(in);
