@@ -154,9 +154,9 @@ public class CRUD {
     
     public static String toString(ResultSet resultSet) {
         StringBuilder resultString = new StringBuilder();
-        resultString.append("---------------------------------------------------------------------------------\n");
-        resultString.append(String.format("| %-13s| %-13s| %-12s| %-21s| %-11s|%n", "Nom", "Device ID", "Type", "Date", "Status"));
-        resultString.append("---------------------------------------------------------------------------------\n");
+        resultString.append("-----------------------------------------------------------------------------------------------------\n");
+        resultString.append(String.format("| %-15s| %-13s| %-30s| %-21s| %-11s|%n", "Nom", "Device ID", "Type", "Date", "Status"));
+        resultString.append("-----------------------------------------------------------------------------------------------------\n");
     
         try {
             while (resultSet.next()) {
@@ -169,9 +169,9 @@ public class CRUD {
     
                 String status = resultSet.getString("status");
     
-                resultString.append(String.format("| %-13s| %-13s| %-12s| %-21s| %-11s|%n", nom, deviceid, type, date, status));
+                resultString.append(String.format("| %-15s| %-13s| %-30s| %-21s| %-11s|%n", nom, deviceid, type, date, status));
             }
-            resultString.append("---------------------------------------------------------------------------------\n");
+            resultString.append("-----------------------------------------------------------------------------------------------------\n");
     
             resultSet.close();
         } catch (SQLException e) {

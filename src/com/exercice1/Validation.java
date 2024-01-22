@@ -43,7 +43,7 @@ public class Validation {
      */
     public static boolean isValidNom(String nom) {
         // Le modèle regex permettant uniquement des lettres et des chiffres
-        String regex = "^[a-zA-Z]+$";
+        String regex = "^[a-zA-Z ]+$";
 
         // Compile le modèle regex en un pattern
         Pattern pattern = Pattern.compile(regex);
@@ -122,7 +122,7 @@ public class Validation {
      */
     public static boolean isValidType(String type) {
         // Le modèle regex permettant uniquement des lettres et des chiffres
-        String regex = "^[a-zA-Z0-9]+$";
+        String regex = "^[a-zA-Z0-9 ]+$";
 
         // Compile le modèle regex en un pattern
         Pattern pattern = Pattern.compile(regex);
