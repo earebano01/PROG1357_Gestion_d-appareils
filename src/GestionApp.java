@@ -8,6 +8,9 @@ import com.exercice1.Validation;
 import com.exercice2.Conn;
 import com.exercice3.CRUD;
 import com.exercice3.IOT_time_series;
+import com.exercice4.ObjetConnecte;
+import com.exercice4.Capteur;
+import com.exercice4.Actuateur;
 
 public class GestionApp {  
     public static void main(String args[]) {
@@ -35,22 +38,60 @@ public class GestionApp {
                 switch (mainChoix) {
                     case 1:
                         System.out.println("=========================================");
-                        System.out.println("Entrez les information pour l'appareil");
+                        System.out.println("Entrez les informations pour l'appareil");
                         System.out.println("=========================================");
 
                         String nom = Validation.nomInput(in);
                         String deviceid = Validation.deviceIDInput(in);
                         String type = Validation.typeInput(in);
-                        
                         Date currentDate = new Date();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        String dateString = dateFormat.format(currentDate);
-                        Timestamp date = Timestamp.valueOf(dateString);
-                        
+                        Timestamp date = new Timestamp(currentDate.getTime());
                         String status = Validation.statusInput(in);
-                        
-                        CRUD.insertData(nom, deviceid, type, date, status);
-                        
+
+                        System.out.println("\nVoulez-vous ajouter un capteur (1), un actionneur (2) ou les deux (3) ?");
+                        int appareilType = in.nextInt();
+                        in.nextLine(); 
+
+                        if (appareilType == 1) {
+                            String typeMesure = Validation.typeMesureInput(in);
+                            CRUD.insertData(nom, deviceid, type, typeMesure, null, date, status);
+
+                            System.out.println("=========================================");
+                            System.out.println("Informations sur le capteur insere");
+                            System.out.println("=========================================");
+
+                            ObjetConnecte capteur = new Capteur(nom, deviceid, type, date, status, typeMesure);
+                            capteur.displayInfo();
+                            ((Capteur) capteur).mesurer();
+                        } else if (appareilType == 2) {
+                            String typeAction = Validation.typeActionInput(in);
+                            CRUD.insertData(nom, deviceid, type, null, typeAction, date, status);
+
+                            System.out.println("=========================================");
+                            System.out.println("Informations sur l'actionneur insere");
+                            System.out.println("=========================================");
+
+                            ObjetConnecte actuateur = new Actuateur(nom, deviceid, type, date, status, typeAction);
+                            actuateur.displayInfo();
+                            ((Actuateur) actuateur).actionner();
+                        } else if (appareilType == 3) {
+                            String typeMesure = Validation.typeMesureInput(in);
+                            String typeAction = Validation.typeActionInput(in);
+                            CRUD.insertData(nom, deviceid, type, typeMesure, typeAction, date, status);
+
+                            System.out.println("=========================================");
+                            System.out.println("Informations sur l'actionneur insere");
+                            System.out.println("=========================================");
+
+                            ObjetConnecte capteur = new Capteur(nom, deviceid, type, date, status, typeMesure);
+                            capteur.displayInfo();
+                            ((Capteur) capteur).mesurer();
+                            ObjetConnecte actuateur = new Actuateur(nom, deviceid, type, date, status, typeAction);
+                            ((Actuateur) actuateur).actionner();
+                        } else {
+                            System.out.println("Choix non valide. Veuillez saisir 1 pour capteur ou 2 pour actionneur.");
+                        }
+
                         break;
 
                     case 2:
@@ -75,9 +116,11 @@ public class GestionApp {
                             String newNom = Validation.nomInput(in);
                             String newdeviceid = Validation.deviceIDInput(in);
                             String newType = Validation.typeInput(in);
+                            String newtypeMesure = Validation.typeInput(in);
+                            String newtypeAction = Validation.typeInput(in);
                             String newStatus = Validation.statusInput(in);
 
-                            CRUD.updateData(oldnom, newNom, newdeviceid, newType, newStatus);
+                            CRUD.updateData(oldnom, newNom, newdeviceid, newType, newtypeMesure, newtypeAction, newStatus);
                         }
                         break;
 

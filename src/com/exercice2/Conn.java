@@ -38,18 +38,21 @@ public class Conn {
 
     private static void creerTable(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
-
+    
         String creerTableRequete = "CREATE TABLE gestionapp ("
                 + "id SERIAL PRIMARY KEY,"
                 + "nom VARCHAR(50),"
                 + "deviceid VARCHAR(50),"
                 + "type VARCHAR(50),"
+                + "typeMesure VARCHAR(50),"     // ajouter pour l'heritage capteur
+                + "typeAction VARCHAR(50),"     // ajouter pour l'heritage actuator
                 + "date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
                 + "status VARCHAR(10)"
                 + ")";
-
+    
         statement.executeUpdate(creerTableRequete);
         statement.close();
         System.out.println("Table 'gestionapp' creee avec succes !");
-    }    
+    }
+        
 }
