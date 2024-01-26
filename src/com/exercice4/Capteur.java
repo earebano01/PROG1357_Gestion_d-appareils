@@ -6,7 +6,7 @@ public class Capteur extends ObjetConnecte {
     public String typeMesure;
 
     public Capteur(String nom, String deviceID, String type, Timestamp date, String status, String typeMesure) {
-        super(nom, deviceID, type, date, status);
+        super(nom, deviceID, type, typeMesure, null, date, status);  
         this.typeMesure = typeMesure;
     }
 
