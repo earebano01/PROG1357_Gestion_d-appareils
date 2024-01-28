@@ -8,16 +8,18 @@ public class ObjetConnecte {
     public String type;
     public String typeMesure;
     public Double temperature;
+    public Double humidity;
     public String typeAction;
     public Timestamp date;
     public String status;
 
-    public ObjetConnecte(String nom, String deviceID, String type, String typeMesure, Double temperature, String typeAction, Timestamp date, String status) {
+    public ObjetConnecte(String nom, String deviceID, String type, String typeMesure, Double temperature, Double humidity, String typeAction, Timestamp date, String status) {
         this.nom = nom;
         this.deviceID = deviceID;
         this.type = type;
         this.typeMesure = typeMesure;
         this.temperature = temperature;
+        this.humidity = humidity;
         this.typeAction = typeAction;
         this.date = date;
         this.status = status;
@@ -29,6 +31,7 @@ public class ObjetConnecte {
         System.out.println("Type: " + type);
         System.out.println("Type Mesure: " + typeMesure);
         System.out.println("Temperature: " + temperature + " °C");
+        System.out.println("Humidity: " + humidity + "%");
         System.out.println("Type Action: " + typeAction);
         System.out.println("Date: " + date);
         System.out.println("Status: " + status);

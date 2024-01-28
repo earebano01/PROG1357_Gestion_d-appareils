@@ -5,11 +5,13 @@ import java.sql.Timestamp;
 public class Actuateur extends ObjetConnecte {
     public String typeAction;
     public Double temperature;
+    public Double humidity;
 
-    public Actuateur(String nom, String deviceID, String type, Timestamp date, String status, String typeAction, Double temperature) {
-        super(nom, deviceID, type, null, temperature, typeAction, date, status); 
+    public Actuateur(String nom, String deviceID, String type, String typeAction, Double temperature, Double humidity, Timestamp date, String status) {
+        super(nom, deviceID, type, null, temperature, humidity, typeAction, date, status); 
         this.typeAction = typeAction;
         this.temperature = temperature;
+        this.humidity = humidity;
     }
 
     public void actionner() {

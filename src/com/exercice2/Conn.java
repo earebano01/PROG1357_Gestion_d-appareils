@@ -44,6 +44,7 @@ public class Conn implements AutoCloseable {
                 + "type VARCHAR(50),"
                 + "typeMesure VARCHAR(50),"
                 + "temperature VARCHAR(10),"
+                + "humidity VARCHAR(10),"
                 + "typeAction VARCHAR(50),"
                 + "date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
                 + "status VARCHAR(10)"

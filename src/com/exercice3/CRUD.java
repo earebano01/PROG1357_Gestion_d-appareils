@@ -10,21 +10,22 @@ import java.sql.ResultSet;
 
 public class CRUD {
 
-    public static void insertData(String nom, String deviceid, String type, String typeMesure, Double temperature, String typeAction, Timestamp date, String status) {
+    public static void insertData(String nom, String deviceid, String type, String typeMesure, Double temperature, Double humidity, String typeAction, Timestamp date, String status) {
         // Conn app = new Conn();
         try (Conn conn = new Conn()) {
     
         try {
-            String insertQuery = "INSERT INTO gestionapp(nom, deviceid, type, typeMesure, temperature, typeAction, date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO gestionapp(nom, deviceid, type, typeMesure, temperature, humidity, typeAction, date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery);
             preparedStatement.setString(1, nom);
             preparedStatement.setString(2, deviceid);
             preparedStatement.setString(3, type);
             preparedStatement.setString(4, typeMesure);
             preparedStatement.setDouble(5, temperature);
-            preparedStatement.setString(6, typeAction);
-            preparedStatement.setTimestamp(7, date);
-            preparedStatement.setString(8, status);
+            preparedStatement.setDouble(6, humidity);
+            preparedStatement.setString(7, typeAction);
+            preparedStatement.setTimestamp(8, date);
+            preparedStatement.setString(9, status);
     
             int rowsAffected = preparedStatement.executeUpdate();
     
@@ -138,9 +139,9 @@ public class CRUD {
     
     public static String toString(ResultSet resultSet) {
         StringBuilder resultString = new StringBuilder();
-        resultString.append("----------------------------------------------------------------------------------------------------------------------------------------------------\n");
-        resultString.append(String.format("| %-21s| %-13s| %-20s| %-18s| %-18s| %-18s| %-21s| %-11s|%n", "Nom", "Device ID", "Type", "Type Mesure", "Temperature", "Type Action", "Date", "Status"));
-        resultString.append("----------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        resultString.append("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        resultString.append(String.format("| %-21s| %-13s| %-20s| %-18s| %-18s| %-18s| %-18s| %-21s| %-11s|%n", "Nom", "Device ID", "Type", "Type Mesure", "Temperature", "Humidity", "Type Action", "Date", "Status"));
+        resultString.append("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     
         try {
             while (resultSet.next()) {
@@ -149,6 +150,7 @@ public class CRUD {
                 String type = resultSet.getString("type");
                 String typeMesure = resultSet.getString("typeMesure");
                 Double temperature = resultSet.getDouble("temperature");
+                Double humidity = resultSet.getDouble("humidity");
                 String typeAction = resultSet.getString("typeAction");
     
                 Timestamp timestamp = resultSet.getTimestamp("date");
@@ -156,9 +158,9 @@ public class CRUD {
     
                 String status = resultSet.getString("status");
     
-                resultString.append(String.format("| %-21s| %-13s| %-20s| %-18s| %-18s| %-18s| %-21s| %-11s|%n", nom, deviceid, type, typeMesure, temperature, typeAction, date, status));
+                resultString.append(String.format("| %-21s| %-13s| %-20s| %-18s| %-18s| %-18s| %-18s| %-21s| %-11s|%n", nom, deviceid, type, typeMesure, temperature, humidity, typeAction, date, status));
             }
-            resultString.append("----------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            resultString.append("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     
             resultSet.close();
         } catch (SQLException e) {
