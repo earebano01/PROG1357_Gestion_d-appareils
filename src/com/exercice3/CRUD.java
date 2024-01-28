@@ -10,35 +10,41 @@ import java.sql.ResultSet;
 
 public class CRUD {
 
-    public static void insertData(String nom, String deviceid, String type, String typeMesure, String typeAction, Timestamp date, String status) {
-        Conn app = new Conn();
+    public static void insertData(String nom, String deviceid, String type, String typeMesure, Double temperature, String typeAction, Timestamp date, String status) {
+        // Conn app = new Conn();
+        try (Conn conn = new Conn()) {
     
         try {
-            String insertQuery = "INSERT INTO gestionapp(nom, deviceid, type, typeMesure, typeAction, date, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement preparedStatement = app.connect().prepareStatement(insertQuery);
+            String insertQuery = "INSERT INTO gestionapp(nom, deviceid, type, typeMesure, temperature, typeAction, date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery);
             preparedStatement.setString(1, nom);
             preparedStatement.setString(2, deviceid);
             preparedStatement.setString(3, type);
             preparedStatement.setString(4, typeMesure);
-            preparedStatement.setString(5, typeAction);
-            preparedStatement.setTimestamp(6, date);
-            preparedStatement.setString(7, status);
+            preparedStatement.setDouble(5, temperature);
+            preparedStatement.setString(6, typeAction);
+            preparedStatement.setTimestamp(7, date);
+            preparedStatement.setString(8, status);
     
             int rowsAffected = preparedStatement.executeUpdate();
     
             preparedStatement.close();
     
-            System.out.println("L'appareil a ete ajoute avec succes !");
+            System.out.println("\nL'appareil a ete ajoute avec succes !");
             System.out.println("");
     
-        } catch (SQLException e) {
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("\nErreur lors de l'ajout de l'appareil.");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de l'ajout de l'appareil.");
-        }
+        } 
     }
 
     public static void updateData(String oldnom, String newnom, String newdeviceid, String newtype, String newtypeMesure, String newtypeAction, String newstatus) {
-        Conn app = new Conn();
+        // Conn app = new Conn();
+        try (Conn conn = new Conn()) {
     
         if (!NomExists.nomExists(oldnom)) {
             System.out.println("appareil inexistant. La mise a jour a échoue.");
@@ -47,7 +53,7 @@ public class CRUD {
     
         try {
             String updateQuery = "UPDATE gestionapp SET nom = ?, deviceid = ?, type = ?, typeMesure = ?, typeAction = ?, status = ? WHERE nom = ?";
-            PreparedStatement preparedStatement = app.connect().prepareStatement(updateQuery);
+            PreparedStatement preparedStatement = conn.connect().prepareStatement(updateQuery);
             preparedStatement.setString(1, newnom);
             preparedStatement.setString(2, newdeviceid);
             preparedStatement.setString(3, newtype);
@@ -67,16 +73,20 @@ public class CRUD {
                 System.out.println("Aucune modification effectuee. Veuillez verifier les donnees.");
             }
     
-        } catch (SQLException e) {
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Erreur lors de la mise a jour de l'appareil.");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la mise a jour de l'appareil.");
-        }
+        } 
     }
     
 
     public static void deleteData(String nom) {
-        Conn app = new Conn();
-
+        // Conn app = new Conn();
+        try (Conn conn = new Conn()) {
+    
         if (!NomExists.nomExists(nom)) {
             System.out.println("Appareil inexistant. La mise a jour a echoue.");
             return;
@@ -84,7 +94,7 @@ public class CRUD {
 
         try {
             String deleteQuery = "DELETE FROM gestionapp WHERE nom = ?";
-            PreparedStatement preparedStatement = app.connect().prepareStatement(deleteQuery);
+            PreparedStatement preparedStatement = conn.connect().prepareStatement(deleteQuery);
             preparedStatement.setString(1, nom);
 
             int rowsAffected = preparedStatement.executeUpdate();
@@ -94,18 +104,22 @@ public class CRUD {
             System.out.println("L'appareil a ete supprime avec succes ! ");
             System.out.println("");
 
-        } catch (SQLException e) {
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Erreur lors de la suppression de l'appareil.");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la suppression de l'appareil.");
-        }
+        } 
     }
 
     public static void readData() {
-        Conn app = new Conn();
+        // Conn app = new Conn();
+        try (Conn conn = new Conn()) {
     
         try {
             String selectQuery = "SELECT * FROM gestionapp";
-            PreparedStatement preparedStatement = app.connect().prepareStatement(selectQuery);
+            PreparedStatement preparedStatement = conn.connect().prepareStatement(selectQuery);
     
             ResultSet resultSet = preparedStatement.executeQuery();
     
@@ -113,17 +127,20 @@ public class CRUD {
     
             preparedStatement.close();
     
-        } catch (SQLException e) {
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Erreur lors de la lecture des appareils.");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la lecture des appareils.");
-        }
+        } 
     }
     
     public static String toString(ResultSet resultSet) {
         StringBuilder resultString = new StringBuilder();
-        resultString.append("-----------------------------------------------------------------------------------------------------------------------------------------\n");
-        resultString.append(String.format("| %-21s| %-13s| %-20s| %-18s| %-18s| %-21s| %-11s|%n", "Nom", "Device ID", "Type", "Type Mesure", "Type Action", "Date", "Status"));
-        resultString.append("-----------------------------------------------------------------------------------------------------------------------------------------\n");
+        resultString.append("----------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        resultString.append(String.format("| %-21s| %-13s| %-20s| %-18s| %-18s| %-18s| %-21s| %-11s|%n", "Nom", "Device ID", "Type", "Type Mesure", "Temperature", "Type Action", "Date", "Status"));
+        resultString.append("----------------------------------------------------------------------------------------------------------------------------------------------------\n");
     
         try {
             while (resultSet.next()) {
@@ -131,6 +148,7 @@ public class CRUD {
                 String deviceid = resultSet.getString("deviceid");
                 String type = resultSet.getString("type");
                 String typeMesure = resultSet.getString("typeMesure");
+                Double temperature = resultSet.getDouble("temperature");
                 String typeAction = resultSet.getString("typeAction");
     
                 Timestamp timestamp = resultSet.getTimestamp("date");
@@ -138,9 +156,9 @@ public class CRUD {
     
                 String status = resultSet.getString("status");
     
-                resultString.append(String.format("| %-21s| %-13s| %-20s| %-18s| %-18s| %-21s| %-11s|%n", nom, deviceid, type, typeMesure, typeAction, date, status));
+                resultString.append(String.format("| %-21s| %-13s| %-20s| %-18s| %-18s| %-18s| %-21s| %-11s|%n", nom, deviceid, type, typeMesure, temperature, typeAction, date, status));
             }
-            resultString.append("-----------------------------------------------------------------------------------------------------------------------------------------\n");
+            resultString.append("----------------------------------------------------------------------------------------------------------------------------------------------------\n");
     
             resultSet.close();
         } catch (SQLException e) {

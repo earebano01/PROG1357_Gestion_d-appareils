@@ -11,17 +11,22 @@ import com.exercice2.Conn;
 import com.exercice3.CRUD;
 import com.exercice3.IOT_time_series;
 import com.exercice4.ObjetConnecte;
+
+import com.exercice4.Simulator;
+
 import com.exercice4.Capteur;
 import com.exercice4.Actuateur;
 
 public class GestionApp {  
     public static void main(String args[]) {
+        try (Conn conn = new Conn()) {
+
         Scanner in = new Scanner(System.in);
         Stack<ObjetConnecte> dataStack = new Stack<>();
         Queue<ObjetConnecte> dataQueue = new LinkedList<>();  
-        
-        Conn app = new Conn();
-        app.connect();        
+        Simulator sim = new Simulator();
+        // Conn app = new Conn();
+        // app.connect();        
         
             while (true) {
                 System.out.println("\nVeuillez selectionner une option :");
@@ -57,28 +62,29 @@ public class GestionApp {
                         int appareilType = in.nextInt();
                         in.nextLine();
 
+
                         if (appareilType == 1) {
                             String typeMesure = Validation.typeMesureInput(in);
-                            
+
                             System.out.println("=========================================");
                             System.out.println("Informations sur le capteur insere");
                             System.out.println("=========================================");
                         
-                            ObjetConnecte capteur = new Capteur(nom, deviceid, type, date, status, typeMesure);
-                            capteur.displayInfo();
-                            ((Capteur) capteur).mesurer();
-                        
+                            ObjetConnecte capteur = new Capteur(nom, deviceid, type, date, status, typeMesure, sim.readTemperature());
+                            capteur.capteurInfo();
+                            ((Capteur) capteur).mesurer(sim);
                             dataStack.push(capteur);
                         
                         } else if (appareilType == 2) {
                             String typeAction = Validation.typeActionInput(in);
+                            Double temperature = 0.00;
                             
                             System.out.println("=========================================");
                             System.out.println("Informations sur l'actionneur insere");
                             System.out.println("=========================================");
                         
-                            ObjetConnecte actuateur = new Actuateur(nom, deviceid, type, date, status, typeAction);
-                            actuateur.displayInfo();
+                            ObjetConnecte actuateur = new Actuateur(nom, deviceid, type, date, status, typeAction, temperature);
+                            actuateur.actionneurInfo();
                             ((Actuateur) actuateur).actionner();
                         
                             dataQueue.offer(actuateur);
@@ -90,18 +96,18 @@ public class GestionApp {
                         break;
 
                     case 2:
-                        System.out.println("=== Donnees dans le Pile ===");
+                        System.out.println("\n=== Donnees dans le Pile ===");
                         for (ObjetConnecte obj : dataStack) {
                             if (obj instanceof Capteur) {
-                                ((Capteur) obj).displayInfo();
+                                ((Capteur) obj).capteurInfo();
                                 System.out.println("\n");
                             }
                         }
                     
-                        System.out.println("=== Donnees dans le Queue ===");
+                        System.out.println("\n=== Donnees dans le Queue ===");
                         for (ObjetConnecte obj : dataQueue) {
                             if (obj instanceof Actuateur) {
-                                ((Actuateur) obj).displayInfo();
+                                ((Actuateur) obj).actionneurInfo();
                                 System.out.println("\n");
                             }
                         }
@@ -114,18 +120,18 @@ public class GestionApp {
                             if (!dataStack.isEmpty() || !dataQueue.isEmpty()) {
                                 while (!dataStack.isEmpty()) {
                                     ObjetConnecte obj = dataStack.pop();
-                                    CRUD.insertData(obj.nom, obj.deviceID, obj.type, obj.typeMesure, obj.typeAction, obj.date, obj.status);
+                                    CRUD.insertData(obj.nom, obj.deviceID, obj.type, obj.typeMesure, obj.temperature, obj.typeAction, obj.date, obj.status);
                                 }
                                 
                                 while (!dataQueue.isEmpty()) {
                                     ObjetConnecte obj = dataQueue.poll();
-                                    CRUD.insertData(obj.nom, obj.deviceID, obj.type, obj.typeMesure, obj.typeAction, obj.date, obj.status);
+                                    CRUD.insertData(obj.nom, obj.deviceID, obj.type, obj.typeMesure, obj.temperature, obj.typeAction, obj.date, obj.status);
                                 }
                                 
                                 dataStack.clear();
                                 dataQueue.clear();
                             
-                                System.out.println("Donnees inserees dans la base de donnees avec succes !");
+                                System.out.println("\nDonnees inserees dans la base de donnees avec succes !");
                             } else {
                                 System.out.println("Erreur : Aucune donnee a enregistrer dans la base de donnees.");
                             }
@@ -187,7 +193,10 @@ public class GestionApp {
                         default:
                         System.out.println("Choix non valide. Veuillez saisir une option valide.");
                         System.out.println("");
+                }
             }
-        }       
+        } catch (Exception e) {
+            e.printStackTrace();
+        } 
     }
 }
