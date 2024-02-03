@@ -7,44 +7,219 @@ import java.text.SimpleDateFormat;
 import java.sql.Timestamp;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.Statement;
+
 
 public class CRUD {
 
-    public static void insertData(String nom, String deviceid, String type, String typeMesure, Double temperature, Double humidity, String typeAction, Timestamp date, String status) {
-        // Conn app = new Conn();
+    // public static void insertData(String nom, String deviceid, String type, String typeMesure, Double temperature, Double humidity, String typeAction, Timestamp date, String status) {
+    //     try (Conn conn = new Conn()) {
+    
+    //     try {
+    //         String insertQuery = "INSERT INTO gestionapp(nom, deviceid, type, typeMesure, temperature, humidity, typeAction, date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    //         PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery);
+    //         preparedStatement.setString(1, nom);
+    //         preparedStatement.setString(2, deviceid);
+    //         preparedStatement.setString(3, type);
+    //         preparedStatement.setString(4, typeMesure);
+    //         preparedStatement.setDouble(5, temperature);
+    //         preparedStatement.setDouble(6, humidity);
+    //         preparedStatement.setString(7, typeAction);
+    //         preparedStatement.setTimestamp(8, date);
+    //         preparedStatement.setString(9, status);
+    
+    //         int rowsAffected = preparedStatement.executeUpdate();
+    
+    //         preparedStatement.close();
+    
+    //         System.out.println("\nL'appareil a ete ajoute avec succes !");
+    //         System.out.println("");
+    
+    //         } catch (SQLException e) {
+    //             e.printStackTrace();
+    //             System.out.println("\nErreur lors de l'ajout de l'appareil.");
+    //         }
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     } 
+    // }
+
+    // public static void insertObjetConnecte(String nom, String device_id, String type, String typemesure, String typeaction) {
+    //     try (Conn conn = new Conn()) {
+    //         try {
+    //             String insertQuery = "INSERT INTO ObjetConnecte(nom, device_id, type, typemesure, typeaction) VALUES (?, ?, ?, ?, ?)";
+    //             PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery);
+    //             preparedStatement.setString(1, nom);
+    //             preparedStatement.setString(2, device_id);
+    //             preparedStatement.setString(3, type);
+    //             preparedStatement.setString(4, typemesure);
+    //             preparedStatement.setString(5, typeaction);
+
+    //             int rowsAffected = preparedStatement.executeUpdate();
+
+    //             preparedStatement.close();
+
+    //             System.out.println("\nL'appareil connecté a été ajouté avec succès !");
+    //             System.out.println("");
+    //         } catch (SQLException e) {
+    //             e.printStackTrace();
+    //             System.out.println("\nErreur lors de l'ajout de l'appareil connecté.");
+    //         }
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
+    // public static void insertCapteur(String status, Double reading_value, Timestamp timestamp) {
+    //     try (Conn conn = new Conn()) {
+    //         try {
+    //             String insertQuery = "INSERT INTO Capteur(status, reading_value, timestamp) VALUES (?, ?, ?, ?)";
+    //             PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery);
+    //             preparedStatement.setInt(1, objet_id);
+    //             preparedStatement.setString(2, status);
+    //             preparedStatement.setDouble(3, reading_value);
+    //             preparedStatement.setTimestamp(4, timestamp);
+
+    //             int rowsAffected = preparedStatement.executeUpdate();
+
+    //             preparedStatement.close();
+
+    //             System.out.println("\nLe capteur a été ajouté avec succès !");
+    //             System.out.println("");
+    //         } catch (SQLException e) {
+    //             e.printStackTrace();
+    //             System.out.println("\nErreur lors de l'ajout du capteur.");
+    //         }
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
+    // public static int insertObjetConnecte(String nom, String device_id, String type, String typemesure, String typeaction) {
+    //     int objet_id = -1; // Initialize to an invalid value
+    
+    //     try (Conn conn = new Conn()) {
+    //         try {
+    //             String insertQuery = "INSERT INTO ObjetConnecte(nom, device_id, type, typemesure, typeaction) VALUES (?, ?, ?, ?, ?) RETURNING object_id";
+    //             PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+    //             preparedStatement.setString(1, nom);
+    //             preparedStatement.setString(2, device_id);
+    //             preparedStatement.setString(3, type);
+    //             preparedStatement.setString(4, typemesure);
+    //             preparedStatement.setString(5, typeaction);
+    
+    //             int rowsAffected = preparedStatement.executeUpdate();
+    
+    //             if (rowsAffected > 0) {
+    //                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+    //                 if (generatedKeys.next()) {
+    //                     objet_id = generatedKeys.getInt(1);
+    //                 }
+    //             }
+    
+    //             preparedStatement.close();
+    
+    //             System.out.println("\nL'appareil connecté a été ajouté avec succès !");
+    //             System.out.println("");
+    //         } catch (SQLException e) {
+    //             e.printStackTrace();
+    //             System.out.println("\nErreur lors de l'ajout de l'appareil connecté.");
+    //         }
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    
+    //     return objet_id;
+    // }
+
+    public static int insertObjetConnecte(String nom, String device_id, String type, String typemesure, String typeaction) {
+        int objet_id = -1; // Initialize to an invalid value
+    
         try (Conn conn = new Conn()) {
+            try {
+                String insertQuery = "INSERT INTO objetconnecte(nom, device_id, type, typemesure, typeaction) VALUES (?, ?, ?, ?, ?) RETURNING objet_id";
+                PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+                preparedStatement.setString(1, nom);
+                preparedStatement.setString(2, device_id);
+                preparedStatement.setString(3, type);
+                preparedStatement.setString(4, typemesure);
+                preparedStatement.setString(5, typeaction);
     
-        try {
-            String insertQuery = "INSERT INTO gestionapp(nom, deviceid, type, typeMesure, temperature, humidity, typeAction, date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery);
-            preparedStatement.setString(1, nom);
-            preparedStatement.setString(2, deviceid);
-            preparedStatement.setString(3, type);
-            preparedStatement.setString(4, typeMesure);
-            preparedStatement.setDouble(5, temperature);
-            preparedStatement.setDouble(6, humidity);
-            preparedStatement.setString(7, typeAction);
-            preparedStatement.setTimestamp(8, date);
-            preparedStatement.setString(9, status);
+                int rowsAffected = preparedStatement.executeUpdate();
     
-            int rowsAffected = preparedStatement.executeUpdate();
+                if (rowsAffected > 0) {
+                    ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        objet_id = generatedKeys.getInt(1);
+                    }
+                }
     
-            preparedStatement.close();
+                preparedStatement.close();
     
-            System.out.println("\nL'appareil a ete ajoute avec succes !");
-            System.out.println("");
-    
+                System.out.println("\nL'appareil connecté a été ajouté avec succès !");
+                System.out.println("");
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println("\nErreur lors de l'ajout de l'appareil.");
+                System.out.println("\nErreur lors de l'ajout de l'appareil connecté.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } 
+        }
+    
+        return objet_id;
+    }
+    
+    
+    public static void insertCapteur(int objet_id, String status, Double reading_value, Timestamp timestamp) {
+        try (Conn conn = new Conn()) {
+            try {
+                String insertQuery = "INSERT INTO Capteur(objet_id, status, reading_value, timestamp) VALUES (?, ?, ?, ?)";
+                PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery);
+                preparedStatement.setInt(1, objet_id);
+                preparedStatement.setString(2, status);
+                preparedStatement.setDouble(3, reading_value);
+                preparedStatement.setTimestamp(4, timestamp);
+    
+                int rowsAffected = preparedStatement.executeUpdate();
+    
+                preparedStatement.close();
+    
+                System.out.println("\nLe capteur a été ajouté avec succès !");
+                System.out.println("");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("\nErreur lors de l'ajout du capteur.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void insertActionneur(int objet_id, String status, Timestamp timestamp) {
+        try (Conn conn = new Conn()) {
+            try {
+                String insertQuery = "INSERT INTO Actionneur(status, timestamp) VALUES (?, ?)";
+                PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery);
+                // preparedStatement.setInt(1, objet_id);
+                preparedStatement.setString(1, status);
+                preparedStatement.setTimestamp(2, timestamp);
+
+                int rowsAffected = preparedStatement.executeUpdate();
+
+                preparedStatement.close();
+
+                System.out.println("\nL'actionneur a été ajouté avec succès !");
+                System.out.println("");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("\nErreur lors de l'ajout de l'actionneur.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void updateData(String oldnom, String newnom, String newdeviceid, String newtype, String newtypeMesure, String newtypeAction, String newstatus) {
-        // Conn app = new Conn();
         try (Conn conn = new Conn()) {
     
         if (!NomExists.nomExists(oldnom)) {
@@ -85,7 +260,6 @@ public class CRUD {
     
 
     public static void deleteData(String nom) {
-        // Conn app = new Conn();
         try (Conn conn = new Conn()) {
     
         if (!NomExists.nomExists(nom)) {
@@ -115,7 +289,6 @@ public class CRUD {
     }
 
     public static void readData() {
-        // Conn app = new Conn();
         try (Conn conn = new Conn()) {
     
         try {

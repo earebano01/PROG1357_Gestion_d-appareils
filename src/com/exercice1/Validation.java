@@ -212,6 +212,45 @@ public class Validation {
         return matcher.matches();
     }
 
+    public static String actuation_statusInput(Scanner in) {
+        String type = "";
+        boolean validactuation_status = false;
+        while (!validactuation_status) {
+            System.out.print("\n(Assurez-vous qu'il contienne uniquement des lettres et chiffres)");
+            System.out.print("\nType d'Action' : ");
+            type = in.nextLine();
+            if (isValidactuation_status(type)) {
+                validactuation_status = true;
+            } else {
+                System.out.println("Vous avez entré un type d'action non-valide!\n");
+            }
+        }
+        return type;
+    }
+
+    /**
+     * Cette méthode est utilisée pour valider le type d'appareil (type).
+     * Elle vérifie si le type d'appareil contient uniquement des lettres et des
+     * chiffres.
+     *
+     * @param type Le type d'appareil à valider.
+     * @return true si le type d'appareil est valide (lettres
+     *         seulement), sinon false.
+     */
+    public static boolean isValidactuation_status(String type) {
+        // Le modèle regex permettant uniquement des lettres et des chiffres
+        String regex = "^[a-zA-Z0-9 ]+$";
+
+        // Compile le modèle regex en un pattern
+        Pattern pattern = Pattern.compile(regex);
+
+        // Crée un matcher pour le type d'utilisateur
+        Matcher matcher = pattern.matcher(type);
+
+        // Vérifie si le type d'utilisateur correspond au modèle regex
+        return matcher.matches();
+    }
+
     /**
      * Cette méthode est utilisée pour valider le statut (Actif/Inactif).
      * L'utilisateur est invité à saisir un statut, et la méthode vérifie si il est
