@@ -45,54 +45,6 @@ public class GestionApp {
 
                     switch (mainChoix) {
                         case 1:
-                            // System.out.println("=========================================");
-                            // System.out.println("Entrez les informations pour l'appareil");
-                            // System.out.println("=========================================");
-
-                            // String nom = Validation.nomInput(in);
-                            // String deviceid = Validation.deviceIDInput(in);
-                            // String type = Validation.typeInput(in);
-                            // Date currentDate = new Date();
-                            // Timestamp date = new Timestamp(currentDate.getTime());
-                            // String status = Validation.statusInput(in);
-
-                            // System.out.println("\nVoulez-vous ajouter un capteur (1) ou un actionneur (2) ?");
-                            // int appareilType = in.nextInt();
-                            // in.nextLine();
-
-                            // if (appareilType == 1) {
-                            //     String typeMesure = Validation.typeMesureInput(in);
-
-                            //     System.out.println("=========================================");
-                            //     System.out.println("Informations sur le capteur insere");
-                            //     System.out.println("=========================================");
-
-                            //     ObjetConnecte capteur = new Capteur(nom, deviceid, type, typeMesure,
-                            //             sim.readTemperature(), sim.readHumidity(), date, status);
-                            //     capteur.capteurInfo();
-                            //     ((Capteur) capteur).mesurer(sim);
-                            //     dataStack.push(capteur);
-
-                            // } else if (appareilType == 2) {
-                            //     String typeAction = Validation.typeActionInput(in);
-                            //     Double temperature = 0.00;
-                            //     Double humidity = 0.00;
-
-                            //     System.out.println("=========================================");
-                            //     System.out.println("Informations sur l'actionneur insere");
-                            //     System.out.println("=========================================");
-
-                            //     ObjetConnecte actuateur = new Actuateur(nom, deviceid, type, typeAction, temperature,
-                            //             humidity, date, status);
-                            //     actuateur.actionneurInfo();
-                            //     ((Actuateur) actuateur).actionner();
-
-                            //     dataQueue.offer(actuateur);
-                            // } else {
-                            //     System.out.println(
-                            //             "Choix non valide. Veuillez saisir (1) pour capteur ou (2) pour actionneur.");
-                            // }
-
                             System.out.println("=========================================");
                             System.out.println("Entrez les informations pour l'appareil");
                             System.out.println("=========================================");
@@ -142,53 +94,6 @@ public class GestionApp {
                             break;
 
                         case 2:
-                            // System.out.println("\n=== Donnees dans le Pile ===");
-                            // for (ObjetConnecte obj : dataStack) {
-                            //     if (obj instanceof Capteur) {
-                            //         ((Capteur) obj).capteurInfo();
-                            //         System.out.println("\n");
-                            //     }
-                            // }
-
-                            // System.out.println("\n=== Donnees dans le Queue ===");
-                            // for (ObjetConnecte obj : dataQueue) {
-                            //     if (obj instanceof Actuateur) {
-                            //         ((Actuateur) obj).actionneurInfo();
-                            //         System.out.println("\n");
-                            //     }
-                            // }
-
-                            // System.out.print(
-                            //         "\n\nVoulez-vous confirmer l'insertion dans la base de donnees ? (1) Oui ou (2) Non : ");
-                            // int confirmation = in.nextInt();
-                            // in.nextLine();
-
-                            // if (confirmation == 1) {
-                            //     if (!dataStack.isEmpty() || !dataQueue.isEmpty()) {
-                            //         while (!dataStack.isEmpty()) {
-                            //             ObjetConnecte obj = dataStack.pop();
-                            //             CRUD.insertData(obj.nom, obj.deviceID, obj.type, obj.typeMesure,
-                            //                     obj.temperature, obj.humidity, obj.typeAction, obj.date, obj.status);
-                            //         }
-
-                            //         while (!dataQueue.isEmpty()) {
-                            //             ObjetConnecte obj = dataQueue.poll();
-                            //             CRUD.insertData(obj.nom, obj.deviceID, obj.type, obj.typeMesure,
-                            //                     obj.temperature, obj.humidity, obj.typeAction, obj.date, obj.status);
-                            //         }
-
-                            //         dataStack.clear();
-                            //         dataQueue.clear();
-
-                            //         System.out.println("\nDonnees inserees dans la base de donnees avec succes !");
-                            //     } else {
-                            //         System.out.println("Erreur : Aucune donnee a enregistrer dans la base de donnees.");
-                            //     }
-                            // } else {
-                            //     System.out.println(
-                            //             "Insertion annulee. Les donnees ne sont pas inserees dans la base de donnees.");
-                            // }
-
                             System.out.println("\n=== Donnees dans le Pile ===");
                             for (ObjetConnecte obj : dataStack) {
                                 if (obj instanceof Capteur) {
