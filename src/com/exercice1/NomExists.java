@@ -11,7 +11,7 @@ public class NomExists {
             boolean exists = false;
 
             try {
-                String checkQuery = "SELECT COUNT(*) AS count FROM gestionapp WHERE nom = ?";
+                String checkQuery = "SELECT COUNT(*) AS count FROM objetconnecte WHERE nom = ?";
                 PreparedStatement checkStatement = conn.connect().prepareStatement(checkQuery);
                 checkStatement.setString(1, checkNom);
                 ResultSet resultSet = checkStatement.executeQuery();

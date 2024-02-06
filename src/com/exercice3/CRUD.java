@@ -3,8 +3,6 @@ import com.exercice2.Conn;
 import com.exercice1.NomExists;
 
 import java.sql.PreparedStatement;
-import java.text.SimpleDateFormat;
-import java.sql.Timestamp;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -12,128 +10,8 @@ import java.sql.Statement;
 
 public class CRUD {
 
-    // public static void insertData(String nom, String deviceid, String type, String typeMesure, Double temperature, Double humidity, String typeAction, Timestamp date, String status) {
-    //     try (Conn conn = new Conn()) {
-    
-    //     try {
-    //         String insertQuery = "INSERT INTO gestionapp(nom, deviceid, type, typeMesure, temperature, humidity, typeAction, date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    //         PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery);
-    //         preparedStatement.setString(1, nom);
-    //         preparedStatement.setString(2, deviceid);
-    //         preparedStatement.setString(3, type);
-    //         preparedStatement.setString(4, typeMesure);
-    //         preparedStatement.setDouble(5, temperature);
-    //         preparedStatement.setDouble(6, humidity);
-    //         preparedStatement.setString(7, typeAction);
-    //         preparedStatement.setTimestamp(8, date);
-    //         preparedStatement.setString(9, status);
-    
-    //         int rowsAffected = preparedStatement.executeUpdate();
-    
-    //         preparedStatement.close();
-    
-    //         System.out.println("\nL'appareil a ete ajoute avec succes !");
-    //         System.out.println("");
-    
-    //         } catch (SQLException e) {
-    //             e.printStackTrace();
-    //             System.out.println("\nErreur lors de l'ajout de l'appareil.");
-    //         }
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     } 
-    // }
-
-    // public static void insertObjetConnecte(String nom, String device_id, String type, String typemesure, String typeaction) {
-    //     try (Conn conn = new Conn()) {
-    //         try {
-    //             String insertQuery = "INSERT INTO ObjetConnecte(nom, device_id, type, typemesure, typeaction) VALUES (?, ?, ?, ?, ?)";
-    //             PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery);
-    //             preparedStatement.setString(1, nom);
-    //             preparedStatement.setString(2, device_id);
-    //             preparedStatement.setString(3, type);
-    //             preparedStatement.setString(4, typemesure);
-    //             preparedStatement.setString(5, typeaction);
-
-    //             int rowsAffected = preparedStatement.executeUpdate();
-
-    //             preparedStatement.close();
-
-    //             System.out.println("\nL'appareil connecté a été ajouté avec succès !");
-    //             System.out.println("");
-    //         } catch (SQLException e) {
-    //             e.printStackTrace();
-    //             System.out.println("\nErreur lors de l'ajout de l'appareil connecté.");
-    //         }
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
-    // public static void insertCapteur(String status, Double reading_value, Timestamp timestamp) {
-    //     try (Conn conn = new Conn()) {
-    //         try {
-    //             String insertQuery = "INSERT INTO Capteur(status, reading_value, timestamp) VALUES (?, ?, ?, ?)";
-    //             PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery);
-    //             preparedStatement.setInt(1, objet_id);
-    //             preparedStatement.setString(2, status);
-    //             preparedStatement.setDouble(3, reading_value);
-    //             preparedStatement.setTimestamp(4, timestamp);
-
-    //             int rowsAffected = preparedStatement.executeUpdate();
-
-    //             preparedStatement.close();
-
-    //             System.out.println("\nLe capteur a été ajouté avec succès !");
-    //             System.out.println("");
-    //         } catch (SQLException e) {
-    //             e.printStackTrace();
-    //             System.out.println("\nErreur lors de l'ajout du capteur.");
-    //         }
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
-    // public static int insertObjetConnecte(String nom, String device_id, String type, String typemesure, String typeaction) {
-    //     int objet_id = -1; // Initialize to an invalid value
-    
-    //     try (Conn conn = new Conn()) {
-    //         try {
-    //             String insertQuery = "INSERT INTO ObjetConnecte(nom, device_id, type, typemesure, typeaction) VALUES (?, ?, ?, ?, ?) RETURNING object_id";
-    //             PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
-    //             preparedStatement.setString(1, nom);
-    //             preparedStatement.setString(2, device_id);
-    //             preparedStatement.setString(3, type);
-    //             preparedStatement.setString(4, typemesure);
-    //             preparedStatement.setString(5, typeaction);
-    
-    //             int rowsAffected = preparedStatement.executeUpdate();
-    
-    //             if (rowsAffected > 0) {
-    //                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-    //                 if (generatedKeys.next()) {
-    //                     objet_id = generatedKeys.getInt(1);
-    //                 }
-    //             }
-    
-    //             preparedStatement.close();
-    
-    //             System.out.println("\nL'appareil connecté a été ajouté avec succès !");
-    //             System.out.println("");
-    //         } catch (SQLException e) {
-    //             e.printStackTrace();
-    //             System.out.println("\nErreur lors de l'ajout de l'appareil connecté.");
-    //         }
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    
-    //     return objet_id;
-    // }
-
     public static int insertObjetConnecte(String nom, String device_id, String type, String typemesure, String typeaction) {
-        int objet_id = -1; // Initialize to an invalid value
+        int objet_id = -1; 
     
         try (Conn conn = new Conn()) {
             try {
@@ -156,11 +34,11 @@ public class CRUD {
     
                 preparedStatement.close();
     
-                System.out.println("\nL'appareil connecté a été ajouté avec succès !");
+                System.out.println("\nL'appareil connecte a ete ajoute avec succès !");
                 System.out.println("");
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println("\nErreur lors de l'ajout de l'appareil connecté.");
+                System.out.println("\nErreur lors de l'ajout de l'appareil connecte.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -169,22 +47,26 @@ public class CRUD {
         return objet_id;
     }
     
-    
-    public static void insertCapteur(int objet_id, String status, Double reading_value, Timestamp timestamp) {
+    public static void insertCapteur(int objet_id, String status, Double temperature, Double humidite, Double son, Double distance, Double lumiere, String formatted_date, String formatted_time) {
         try (Conn conn = new Conn()) {
             try {
-                String insertQuery = "INSERT INTO Capteur(objet_id, status, reading_value, timestamp) VALUES (?, ?, ?, ?)";
+                String insertQuery = "INSERT INTO Capteur(objet_id, status, temperature, humidite, son, distance, lumiere, formatted_date, formatted_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery);
                 preparedStatement.setInt(1, objet_id);
                 preparedStatement.setString(2, status);
-                preparedStatement.setDouble(3, reading_value);
-                preparedStatement.setTimestamp(4, timestamp);
+                preparedStatement.setDouble(3, temperature);
+                preparedStatement.setDouble(4, humidite);
+                preparedStatement.setDouble(5, son);
+                preparedStatement.setDouble(6, distance);
+                preparedStatement.setDouble(7, lumiere);
+                preparedStatement.setString(8, formatted_date);
+                preparedStatement.setString(9, formatted_time);
     
                 int rowsAffected = preparedStatement.executeUpdate();
     
                 preparedStatement.close();
     
-                System.out.println("\nLe capteur a été ajouté avec succès !");
+                System.out.println("\nLe capteur a ete ajoute avec succès !");
                 System.out.println("");
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -195,20 +77,21 @@ public class CRUD {
         }
     }
 
-    public static void insertActionneur(int objet_id, String status, Timestamp timestamp) {
+    public static void insertActionneur(int objet_id, String status, String formatted_date, String formatted_time) {
         try (Conn conn = new Conn()) {
             try {
-                String insertQuery = "INSERT INTO Actionneur(status, timestamp) VALUES (?, ?)";
+                String insertQuery = "INSERT INTO Actionneur(objet_id, status, formatted_date, formatted_time) VALUES (?, ?, ?, ?)";
                 PreparedStatement preparedStatement = conn.connect().prepareStatement(insertQuery);
-                // preparedStatement.setInt(1, objet_id);
-                preparedStatement.setString(1, status);
-                preparedStatement.setTimestamp(2, timestamp);
+                preparedStatement.setInt(1, objet_id);
+                preparedStatement.setString(2, status);
+                preparedStatement.setString(3, formatted_date);
+                preparedStatement.setString(4, formatted_time);
 
                 int rowsAffected = preparedStatement.executeUpdate();
 
                 preparedStatement.close();
 
-                System.out.println("\nL'actionneur a été ajouté avec succès !");
+                System.out.println("\nL'actionneur a ete ajoute avec succès !");
                 System.out.println("");
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -219,24 +102,22 @@ public class CRUD {
         }
     }
 
-    public static void updateData(String oldnom, String newnom, String newdeviceid, String newtype, String newtypeMesure, String newtypeAction, String newstatus) {
+    public static void updateCapteur(String oldnom, String newnom, String newdeviceid, String newtype, String newtypemesure) {
         try (Conn conn = new Conn()) {
     
         if (!NomExists.nomExists(oldnom)) {
-            System.out.println("appareil inexistant. La mise a jour a échoue.");
+            System.out.println("appareil inexistant. La mise a jour a echoue.");
             return;
         }
     
         try {
-            String updateQuery = "UPDATE gestionapp SET nom = ?, deviceid = ?, type = ?, typeMesure = ?, typeAction = ?, status = ? WHERE nom = ?";
+            String updateQuery = "UPDATE objetconnecte SET nom = ?, device_id = ?, type = ?, typemesure = ? WHERE nom = ?";
             PreparedStatement preparedStatement = conn.connect().prepareStatement(updateQuery);
             preparedStatement.setString(1, newnom);
             preparedStatement.setString(2, newdeviceid);
             preparedStatement.setString(3, newtype);
-            preparedStatement.setString(4, newtypeMesure);
-            preparedStatement.setString(5, newtypeAction);
-            preparedStatement.setString(6, newstatus);
-            preparedStatement.setString(7, oldnom);
+            preparedStatement.setString(4, newtypemesure);
+            preparedStatement.setString(5, oldnom);
     
             int rowsAffected = preparedStatement.executeUpdate();
     
@@ -257,7 +138,43 @@ public class CRUD {
             e.printStackTrace();
         } 
     }
+
+    public static void updateActuateur(String oldnom, String newnom, String newdeviceid, String newtype, String newtypeaction) {
+        try (Conn conn = new Conn()) {
     
+            if (!NomExists.nomExists(oldnom)) {
+                System.out.println("Appareil inexistant. La mise a jour a echoue.");
+                return;
+            }
+    
+            try {
+                String updateQuery = "UPDATE objetconnecte SET nom = ?, device_id = ?, type = ?, typeaction = ? WHERE nom = ?";
+                PreparedStatement preparedStatement = conn.connect().prepareStatement(updateQuery);
+                preparedStatement.setString(1, newnom);
+                preparedStatement.setString(2, newdeviceid);
+                preparedStatement.setString(3, newtype);
+                preparedStatement.setString(4, newtypeaction);
+                preparedStatement.setString(5, oldnom);
+    
+                int rowsAffected = preparedStatement.executeUpdate();
+    
+                preparedStatement.close();
+    
+                if (rowsAffected > 0) {
+                    System.out.println("L'appareil a ete mis a jour avec succes !");
+                    System.out.println("");
+                } else {
+                    System.out.println("Aucune modification effectuee. Veuillez verifier les donnees.");
+                }
+    
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Erreur lors de la mise a jour de l'appareil.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void deleteData(String nom) {
         try (Conn conn = new Conn()) {
@@ -268,7 +185,7 @@ public class CRUD {
         }
 
         try {
-            String deleteQuery = "DELETE FROM gestionapp WHERE nom = ?";
+            String deleteQuery = "DELETE FROM objetconnecte WHERE nom = ?";
             PreparedStatement preparedStatement = conn.connect().prepareStatement(deleteQuery);
             preparedStatement.setString(1, nom);
 
@@ -288,18 +205,16 @@ public class CRUD {
         } 
     }
 
-    public static void readData() {
+    public static void readOB() {
         try (Conn conn = new Conn()) {
+            try {
+                String selectQuery = "SELECT * FROM objetconnecte";
+                PreparedStatement preparedStatement = conn.connect().prepareStatement(selectQuery);
+                ResultSet resultSet = preparedStatement.executeQuery();
     
-        try {
-            String selectQuery = "SELECT * FROM gestionapp";
-            PreparedStatement preparedStatement = conn.connect().prepareStatement(selectQuery);
+                System.out.println(toStringAB(resultSet));
     
-            ResultSet resultSet = preparedStatement.executeQuery();
-    
-            System.out.println(toString(resultSet));
-    
-            preparedStatement.close();
+                preparedStatement.close();
     
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -307,33 +222,26 @@ public class CRUD {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } 
+        }
     }
     
-    public static String toString(ResultSet resultSet) {
+    public static String toStringAB(ResultSet resultSet) {
         StringBuilder resultString = new StringBuilder();
-        resultString.append("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-        resultString.append(String.format("| %-21s| %-13s| %-20s| %-18s| %-18s| %-18s| %-18s| %-21s| %-11s|%n", "Nom", "Device ID", "Type", "Type Mesure", "Temperature", "Humidity", "Type Action", "Date", "Status"));
-        resultString.append("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        resultString.append("-------------------------------------------------------------------------------------------------------------\n");
+        resultString.append(String.format("| %-21s | %-13s | %-20s | %-18s | %-21s |\n", "Nom", "Device ID", "Type", "Type Mesure", "Type Action"));
+        resultString.append("-------------------------------------------------------------------------------------------------------------\n");
     
         try {
             while (resultSet.next()) {
                 String nom = resultSet.getString("nom");
-                String deviceid = resultSet.getString("deviceid");
+                String deviceid = resultSet.getString("device_id");
                 String type = resultSet.getString("type");
-                String typeMesure = resultSet.getString("typeMesure");
-                Double temperature = resultSet.getDouble("temperature");
-                Double humidity = resultSet.getDouble("humidity");
-                String typeAction = resultSet.getString("typeAction");
+                String typeMesure = resultSet.getString("typemesure");
+                String typeAction = resultSet.getString("typeaction");
     
-                Timestamp timestamp = resultSet.getTimestamp("date");
-                String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timestamp);
-    
-                String status = resultSet.getString("status");
-    
-                resultString.append(String.format("| %-21s| %-13s| %-20s| %-18s| %-18s| %-18s| %-18s| %-21s| %-11s|%n", nom, deviceid, type, typeMesure, temperature, humidity, typeAction, date, status));
+                resultString.append(String.format("| %-21s | %-13s | %-20s | %-18s | %-21s |\n", nom, deviceid, type, typeMesure, typeAction));
             }
-            resultString.append("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            resultString.append("-------------------------------------------------------------------------------------------------------------\n");
     
             resultSet.close();
         } catch (SQLException e) {
@@ -343,6 +251,107 @@ public class CRUD {
     
         return resultString.toString();
     }
+    
+    public static void readCA() {
+        try (Conn conn = new Conn()) {
+            try {
+                String selectQuery = "SELECT c.nom, c.device_id, c.type, ca.status, ca.temperature, ca.humidite, ca.son, ca.distance, ca.lumiere, ca.formatted_date, ca.formatted_time FROM objetconnecte c INNER JOIN capteur ca ON c.objet_id = ca.objet_id";
+                PreparedStatement preparedStatement = conn.connect().prepareStatement(selectQuery);
+                ResultSet resultSet = preparedStatement.executeQuery();
+    
+                System.out.println(toStringCA(resultSet));
+    
+                preparedStatement.close();
+    
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Erreur lors de la lecture des capteurs.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static String toStringCA(ResultSet resultSet) {
+        StringBuilder resultString = new StringBuilder();
+        resultString.append("-------------------------------------------------------------------------------------------------------------\n");
+        resultString.append(String.format("| %-21s | %-13s | %-20s | %-10s | %-12s | %-10s | %-10s | %-12s | %-10s | %-12s | %-12s |\n", "Nom", "Device ID", "Type", "Status", "Temperature", "Humidite", "Son", "Distance", "Lumiere", "Date", "Time"));
+        resultString.append("-------------------------------------------------------------------------------------------------------------\n");
+    
+        try {
+            while (resultSet.next()) {
+                String nom = resultSet.getString("nom");
+                String deviceid = resultSet.getString("device_id");
+                String type = resultSet.getString("type");
+                String status = resultSet.getString("status");
+                double temperature = resultSet.getDouble("temperature");
+                double humidite = resultSet.getDouble("humidite");
+                double son = resultSet.getDouble("son");
+                double distance = resultSet.getDouble("distance");
+                double lumiere = resultSet.getDouble("lumiere");
+                String formattedDate = resultSet.getString("formatted_date");
+                String formattedTime = resultSet.getString("formatted_time");
+    
+                resultString.append(String.format("| %-21s | %-13s | %-20s | %-10s | %-12.2f | %-10.2f | %-10.2f | %-12.2f | %-10.2f | %-12s | %-12s |\n", nom, deviceid, type, status, temperature, humidite, son, distance, lumiere, formattedDate, formattedTime));
+            }
+            resultString.append("-------------------------------------------------------------------------------------------------------------\n");
+    
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            resultString.append("Erreur lors de la lecture des capteurs.\n");
+        }
+    
+        return resultString.toString();
+    }
+    
+    public static void readAC() {
+        try (Conn conn = new Conn()) {
+            try {
+                String selectQuery = "SELECT * FROM Actionneur";
+                PreparedStatement preparedStatement = conn.connect().prepareStatement(selectQuery);
+                ResultSet resultSet = preparedStatement.executeQuery();
+    
+                System.out.println(toStringAC(resultSet));
+    
+                preparedStatement.close();
+    
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Erreur lors de la lecture des actionneurs.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static String toStringAC(ResultSet resultSet) {
+        StringBuilder resultString = new StringBuilder();
+        resultString.append("--------------------------------------------------------------------------------------\n");
+        resultString.append(String.format("| %-14s | %-10s | %-15s | %-17s | %-14s |\n", "Actionneur ID", "Objet ID", "Status", "Date", "Time"));
+        resultString.append("--------------------------------------------------------------------------------------\n");
+    
+        try {
+            while (resultSet.next()) {
+                int actionneurId = resultSet.getInt("actionneur_id");
+                int objetId = resultSet.getInt("objet_id");
+                String status = resultSet.getString("status");
+                String formattedDate = resultSet.getString("formatted_date");
+                String formattedTime = resultSet.getString("formatted_time");
+    
+                resultString.append(String.format("| %-14d | %-10d | %-15s | %-17s | %-14s |\n", actionneurId, objetId, status, formattedDate, formattedTime));
+            }
+            resultString.append("--------------------------------------------------------------------------------------\n");
+    
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            resultString.append("Erreur lors de la lecture des actionneurs.\n");
+        }
+    
+        return resultString.toString();
+    }
+    
     
 
 }

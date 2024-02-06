@@ -1,16 +1,16 @@
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import com.exercice1.NomExists;
 import com.exercice1.Validation;
 import com.exercice2.Conn;
 import com.exercice3.CRUD;
-import com.exercice3.IOT_time_series;
 import com.exercice4.ObjetConnecte;
 import com.exercice4.Simulator;
 import com.exercice4.Capteur;
@@ -33,9 +33,7 @@ public class GestionApp {
                     System.out.println("3. Retirer un appareil");
                     System.out.println("4. Modifier un appareil");
                     System.out.println("5. Afficher tous les appareil");
-                    System.out.println("6. Afficher temperatures croissantes");
-                    System.out.println("7. Afficher temperatures decroissantes");
-                    System.out.println("8. Sortie");
+                    System.out.println("6. Sortie");
                     System.out.println("");
                     System.out.print("Saisissez votre choix : ");
                     int mainChoix = in.nextInt();
@@ -52,39 +50,127 @@ public class GestionApp {
                             String nom = Validation.nomInput(in);
                             String deviceid = Validation.deviceIDInput(in);
                             String type = Validation.typeInput(in);
-                            Date currentDate = new Date();
-                            Timestamp date = new Timestamp(currentDate.getTime());
+                            LocalDate date = LocalDate.now();
+                            LocalTime time = LocalTime.now();
+                            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+                            String formattedDate = date.format(dateFormatter);
+                            String formattedTime = time.format(timeFormatter);
                             String status = Validation.statusInput(in);
+                            Double temperature = sim.readTemperature();
+                            Double humidite = sim.readHumidity();
+                            Double son = 0.0;
+                            Double distance = 0.0;
+                            Double lumiere = 0.0;
 
                             System.out.println("\nVoulez-vous ajouter un capteur (1) ou un actionneur (2) ?");
                             int appareilType = in.nextInt();
                             in.nextLine();
 
                             if (appareilType == 1) {
-                                String typeMesure = Validation.typeMesureInput(in);
-                                Double reading_value = sim.readTemperature();;
+                                System.out.println("\nMenu Type de Mesure :");
+                                System.out.println("1. Temperature");
+                                System.out.println("2. Humidite");
+                                System.out.println("3. Temperature & Humidite");
+                                System.out.println("4. Son");
+                                System.out.println("5. Distance");
+                                System.out.println("6. Lumiere");
+                                System.out.print("\nEntrez votre choix entre 1 a 6 : ");
+                            
+                                int mesureChoice = in.nextInt();
+                                in.nextLine();
+                            
+                                String typeMesure = "";
+                            
+                                switch (mesureChoice) {
+                                    case 1:
+                                        typeMesure = "Temperature";
+                                        temperature = sim.readTemperature();
+                                        break;
+                                    case 2:
+                                        typeMesure = "Humidite";
+                                        humidite = sim.readHumidity();
+                                        break;
+                                    case 3:
+                                        typeMesure = "Temperature & Humidite";
+                                        temperature = sim.readTemperature();
+                                        humidite = sim.readHumidity();
+                                        break;
+                                    case 4:
+                                        typeMesure = "Son";
+                                        son = 0.0;
+                                        break;
 
-                                System.out.println("=========================================");
+                                    case 5:
+                                        typeMesure = "Distance";
+                                        distance = 0.0;
+                                        break;
+
+                                    case 6:
+                                        typeMesure = "Lumiere";
+                                        lumiere = 0.0;
+                                        break;
+                                    default:
+                                        System.out.println("Choix non valide. Veuillez choisir entre 1 a 6.");
+                                        return;
+                                }
+                    
+                                System.out.println("\n=========================================");
                                 System.out.println("Informations sur le capteur insere");
                                 System.out.println("=========================================");
-
-                                ObjetConnecte capteur = new Capteur(nom, deviceid, type, typeMesure, reading_value, date, status);
+                    
+                                ObjetConnecte capteur = new Capteur(nom, deviceid, type, typeMesure, temperature, humidite, son, distance, lumiere, formattedDate, formattedTime, status);
                                 capteur.capteurInfo();
                                 ((Capteur) capteur).mesurer(sim);
                                 dataStack.push(capteur);
 
                             } else if (appareilType == 2) {
-                                String typeAction = Validation.typeActionInput(in);
-                                String actuation_status = Validation.actuation_statusInput(in);
+                                System.out.println("\nMenu Type d'Action :");
+                                System.out.println("1. Allumer / Eteindre");
+                                System.out.println("2. Ouvrir / Fermer");
+                                System.out.println("3. Augmenter / Diminuer");
+                                System.out.println("4. Activer / Desactiver");
+                                System.out.println("5. Tourner / Incliner");
+                                System.out.println("6. Positionner / Reinitialiser");
+                                System.out.print("\nEntrez votre choix entre 1 et 6 : ");
+                                
+                                int actionChoice = in.nextInt();
+                                in.nextLine();
+                                
+                                String typeAction = "";
+                                
+                                switch (actionChoice) {
+                                    case 1:
+                                        typeAction = "Allumer / Eteindre";
+                                        break;
+                                    case 2:
+                                        typeAction = "Ouvrir / Fermer";
+                                        break;
+                                    case 3:
+                                        typeAction = "Augmenter / Diminuer";
+                                        break;
+                                    case 4:
+                                        typeAction = "Activer / Desactiver";
+                                        break;
+                                    case 5:
+                                        typeAction = "Tourner / Incliner";
+                                        break;
+                                    case 6:
+                                        typeAction = "Positionner / Reinitialiser";
+                                        break;
+                                    default:
+                                        System.out.println("Choix non valide. Veuillez choisir entre 1 et 6.");
+                                        return;
+                                }
 
                                 System.out.println("=========================================");
                                 System.out.println("Informations sur l'actionneur insere");
                                 System.out.println("=========================================");
 
-                                ObjetConnecte actuateur = new Actuateur(nom, deviceid, type, typeAction, date, actuation_status, status);
+                                ObjetConnecte actuateur = new Actuateur(nom, deviceid, type, typeAction, formattedDate, formattedTime, status);
                                 actuateur.actionneurInfo();
                                 dataQueue.offer(actuateur);
-                                
 
                             } else {
                                 System.out.println(
@@ -97,8 +183,8 @@ public class GestionApp {
                             System.out.println("\n=== Donnees dans le Pile ===");
                             for (ObjetConnecte obj : dataStack) {
                                 if (obj instanceof Capteur) {
-                                    ((Capteur) obj).capteurInfo();
-                                    System.out.println("\n");
+                                    ((Capteur) obj).capteurAll();
+                                    // System.out.println("\n");
                                 }
                             }
 
@@ -106,11 +192,11 @@ public class GestionApp {
                             for (ObjetConnecte obj : dataQueue) {
                                 if (obj instanceof Actuateur) {
                                     ((Actuateur) obj).actionneurInfo();
-                                    System.out.println("\n");
+                                    // System.out.println("\n");
                                 }
                             }
 
-                            System.out.print("\n\nVoulez-vous confirmer l'insertion dans la base de donnees ? (1) Oui ou (2) Non : ");
+                            System.out.print("\nVoulez-vous confirmer l'insertion dans la base de donnees ? (1) Oui ou (2) Non : ");
                             int confirmation = in.nextInt();
                             in.nextLine();
 
@@ -120,7 +206,7 @@ public class GestionApp {
                                         ObjetConnecte obj = dataStack.pop();
                                         if (obj instanceof Capteur) {
                                             int objetId = CRUD.insertObjetConnecte(obj.nom, obj.deviceID, obj.type, obj.typeMesure, obj.typeAction);
-                                            CRUD.insertCapteur(objetId, obj.status, obj.reading_value, obj.timestamp);
+                                            CRUD.insertCapteur(objetId, obj.status, obj.temperature, obj.humidite, obj.son, obj.distance, obj.lumiere, obj.formattedDate, obj.formattedTime);
                                         }
                                     }
 
@@ -128,7 +214,7 @@ public class GestionApp {
                                         ObjetConnecte obj = dataQueue.poll();
                                         if (obj instanceof Actuateur) {
                                             int objetId = CRUD.insertObjetConnecte(obj.nom, obj.deviceID, obj.type, obj.typeMesure, obj.typeAction);
-                                            CRUD.insertActionneur(objetId, obj.status, obj.timestamp);
+                                            CRUD.insertActionneur(objetId, obj.status, obj.formattedDate, obj.formattedTime);
                                         }
                                     }
 
@@ -158,38 +244,141 @@ public class GestionApp {
                             break;
 
                         case 4:
-                            System.out.print("Entrez l'ancien nom de l'appareil : ");
+                            System.out.println("\nVoulez-vous modifier un capteur (1) ou un actionneur (2) ?");
+                            int majChoix = in.nextInt();
+                            in.nextLine();
 
-                            String oldnom = in.nextLine();
+                            String newNom = "", newdeviceid = "", newType = "", newTypeMesure = "", newTypeAction = "";
 
-                            if (!NomExists.nomExists(oldnom)) {
-                                System.out.println("Appareil inexistant. La mise a jour a echoue.");
+                            if (majChoix == 1) {
+                                System.out.print("Entrez l'ancien nom du Capteur : ");
+                                String oldnom = in.nextLine();
+
+                                if (!NomExists.nomExists(oldnom)) {
+                                    System.out.println("Capteur inexistant. La mise a jour a echoue.");
+                                } else {
+                                    newNom = Validation.nomInput(in);
+                                    newdeviceid = Validation.deviceIDInput(in);
+                                    newType = Validation.typeInput(in);
+
+                                    System.out.println("\nMenu Type de Mesure :");
+                                    System.out.println("1. Temperature");
+                                    System.out.println("2. Humidite");
+                                    System.out.println("3. Temperature & Humidite");
+                                    System.out.println("4. Son");
+                                    System.out.println("5. Distance");
+                                    System.out.println("6. Lumiere");
+                                    System.out.print("\nEntrez votre choix entre 1 a 6 : ");
+
+                                    int mesureChoice = in.nextInt();
+                                    in.nextLine();
+
+                                    switch (mesureChoice) {
+                                        case 1:
+                                            newTypeMesure = "Temperature";
+                                            break;
+                                        case 2:
+                                            newTypeMesure = "Humidite";
+                                            break;
+                                        case 3:
+                                            newTypeMesure = "Temperature & Humidite";
+                                            break;
+                                        case 4:
+                                            newTypeMesure = "Son";
+                                            break;
+                                        case 5:
+                                            newTypeMesure = "Distance";
+                                            break;
+                                        case 6:
+                                            newTypeMesure = "Lumiere";
+                                            break;
+                                        default:
+                                            System.out.println("Choix non valide. Veuillez choisir entre 1 a 6.");
+                                            return;
+                                    }
+                                }
+                                CRUD.updateCapteur(oldnom, newNom, newdeviceid, newType, newTypeMesure);
+
+                            } else if (majChoix == 2) {
+                                System.out.print("Entrez l'ancien nom de l'actionneur : ");
+                                String oldnom = in.nextLine();
+
+                                if (!NomExists.nomExists(oldnom)) {
+                                    System.out.println("Actionneur inexistant. La mise a jour a echoue.");
+                                } else {
+                                    newNom = Validation.nomInput(in);
+                                    newdeviceid = Validation.deviceIDInput(in);
+                                    newType = Validation.typeInput(in);
+
+                                    System.out.println("\nMenu Type d'Action :");
+                                    System.out.println("1. Allumer / Eteindre");
+                                    System.out.println("2. Ouvrir / Fermer");
+                                    System.out.println("3. Augmenter / Diminuer");
+                                    System.out.println("4. Activer / Desactiver");
+                                    System.out.println("5. Tourner / Incliner");
+                                    System.out.println("6. Positionner / Reinitialiser");
+                                    System.out.print("\nEntrez votre choix entre 1 et 6 : ");
+
+                                    int actionChoice = in.nextInt();
+                                    in.nextLine();
+
+                                    switch (actionChoice) {
+                                        case 1:
+                                            newTypeAction = "Allumer / Eteindre";
+                                            break;
+                                        case 2:
+                                            newTypeAction = "Ouvrir / Fermer";
+                                            break;
+                                        case 3:
+                                            newTypeAction = "Augmenter / Diminuer";
+                                            break;
+                                        case 4:
+                                            newTypeAction = "Activer / Desactiver";
+                                            break;
+                                        case 5:
+                                            newTypeAction = "Tourner / Incliner";
+                                            break;
+                                        case 6:
+                                            newTypeAction = "Positionner / Reinitialiser";
+                                            break;
+                                        default:
+                                            System.out.println("Choix non valide. Veuillez choisir entre 1 et 6.");
+                                            return;
+                                    }
+
+                                    CRUD.updateActuateur(oldnom, newNom, newdeviceid, newType, newTypeAction);
+                                }
                             } else {
-                                String newNom = Validation.nomInput(in);
-                                String newdeviceid = Validation.deviceIDInput(in);
-                                String newType = Validation.typeInput(in);
-                                String newtypeMesure = Validation.typeInput(in);
-                                String newtypeAction = Validation.typeInput(in);
-                                String newStatus = Validation.statusInput(in);
+                                System.out.println(
+                                        "Choix non valide. Veuillez choisir 1 (capteur) ou 2 (actionneur).");
+                            }
+                        break;
 
-                                CRUD.updateData(oldnom, newNom, newdeviceid, newType, newtypeMesure, newtypeAction,
-                                        newStatus);
+                        case 5:
+                            System.out.println("\nQuel tableau voulez-vous voir ?");
+                            System.out.println("1. Objet Connecte");
+                            System.out.println("2. Capteur");
+                            System.out.println("3. Actionneur");
+                            System.out.print("\nEntrez votre choix entre 1 et 3 : ");
+                            int lireChoix = in.nextInt();
+                            in.nextLine();
+                            
+                            switch (lireChoix) {
+                                case 1:
+                                    CRUD.readOB();
+                                    break;
+                                case 2:
+                                    CRUD.readCA();
+                                    break;
+                                case 3:
+                                    CRUD.readAC();
+                                    break;
+                                default:
+                                    System.out.println("Choix non valide. Veuillez choisir entre 1 et 3.");
                             }
                             break;
 
-                        case 5:
-                            CRUD.readData();
-                            break;
-
                         case 6:
-                            IOT_time_series.tempDataASC();
-                            break;
-
-                        case 7:
-                            IOT_time_series.tempDataDESC();
-                            break;
-
-                        case 8:
                             System.out.println("Fin du programme.");
                             System.out.println("");
                             System.exit(0);

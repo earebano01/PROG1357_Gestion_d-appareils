@@ -55,7 +55,6 @@ public class Validation {
         return matcher.matches();
     }
     
-
     public static String deviceIDInput(Scanner in) {
         String deviceID = "";
         boolean ValidDeviceID = false;

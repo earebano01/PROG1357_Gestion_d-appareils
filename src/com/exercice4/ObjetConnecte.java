@@ -1,27 +1,33 @@
 package com.exercice4;
 
-import java.sql.Timestamp;
-
 public class ObjetConnecte {
     public String nom;
     public String deviceID;
     public String type;
     public String typeMesure;
-    public Double reading_value; // Changed to reading_value
-    public Timestamp timestamp; // Changed to timestamp
+    public Double temperature; 
+    public Double humidite; 
+    public Double son; 
+    public Double distance; 
+    public Double lumiere; 
+    public String formattedDate;
+    public String formattedTime;
     public String typeAction;
-    public String actuation_status; // Changed to actuation_status
     public String status;
 
-    public ObjetConnecte(String nom, String deviceID, String type, String typeMesure, Double reading_value, String typeAction, String actuation_status, Timestamp timestamp, String status) {
+    public ObjetConnecte(String nom, String deviceID, String type, String typeMesure, Double temperature, Double humidite, Double son, Double distance, Double lumiere, String typeAction, String formattedDate, String formattedTime, String status) {
         this.nom = nom;
         this.deviceID = deviceID;
         this.type = type;
         this.typeMesure = typeMesure;
-        this.reading_value = reading_value;
-        this.timestamp = timestamp;
+        this.temperature = temperature;
+        this.humidite = humidite;
+        this.son = son;
+        this.distance = distance;
+        this.lumiere = lumiere;
+        this.formattedDate = formattedDate;
+        this.formattedTime = formattedTime;
         this.typeAction = typeAction;
-        this.actuation_status = actuation_status;
         this.status = status;
     }
 
@@ -30,10 +36,20 @@ public class ObjetConnecte {
         System.out.println("Device ID: " + deviceID);
         System.out.println("Type: " + type);
         System.out.println("Type Mesure: " + typeMesure);
-        System.out.println("Reading Value: " + reading_value);
-        System.out.println("Timestamp: " + timestamp);
-        System.out.println("Type Action: " + typeAction);
-        System.out.println("Actuation Status: " + actuation_status);
+    }
+
+    public void capteurAll() {
+        System.out.println("Nom: " + nom);
+        System.out.println("Device ID: " + deviceID);
+        System.out.println("Type: " + type);
+        System.out.println("Type Mesure: " + typeMesure);
+        System.out.println("Temperature: " + temperature);
+        System.out.println("Humidite: " + humidite);
+        System.out.println("Son: " + son);
+        System.out.println("Distance: " + distance);
+        System.out.println("Lumiere: " + lumiere);
+        System.out.println("Date: " + formattedDate);
+        System.out.println("Time: " + formattedTime);
         System.out.println("Status: " + status);
     }
 
@@ -41,10 +57,9 @@ public class ObjetConnecte {
         System.out.println("Nom: " + nom);
         System.out.println("Device ID: " + deviceID);
         System.out.println("Type: " + type);
-        // System.out.println("Type Mesure: " + typeMesure);
         System.out.println("Type Action: " + typeAction);
-        System.out.println("Actuation Status: " + actuation_status);
-        System.out.println("Timestamp: " + timestamp);
+        System.out.println("Date: " + formattedDate);
+        System.out.println("Time: " + formattedTime);
         System.out.println("Status: " + status);
     }
 }

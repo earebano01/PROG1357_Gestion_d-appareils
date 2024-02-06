@@ -1,75 +1,7 @@
-// package com.exercice2;
-
-// import java.sql.Connection;
-// import java.sql.DatabaseMetaData;
-// import java.sql.DriverManager;
-// import java.sql.ResultSet;
-// import java.sql.SQLException;
-// import java.sql.Statement;
- 
-//     public class Conn implements AutoCloseable {   
-    
-//     private Connection connection;
-
-//     public Connection connect() {
-//         String user = "postgres";
-//         String password = "admin";
-//         String url = "jdbc:postgresql://localhost:5432/postgres";
-
-//         try {
-//             connection = DriverManager.getConnection(url, user, password);
-//             if (!tableExists(connection, "gestionapp")) {
-//                 createTable(connection);
-//             }
-//         } catch (SQLException e) {
-//             e.printStackTrace();
-//             System.out.println("Erreur de connexion à la base de données.");
-//         }
-//         return connection;
-//     }
-
-//     private static boolean tableExists(Connection connection, String tableName) throws SQLException {
-//         DatabaseMetaData metadata = connection.getMetaData();
-//         ResultSet tables = metadata.getTables(null, null, tableName, null);
-//         return tables.next();
-//     }
-
-//     private static void createTable(Connection connection) throws SQLException {
-//         Statement statement = connection.createStatement();
-
-//         String createTableQuery = "CREATE TABLE gestionapp ("
-//                 + "id SERIAL PRIMARY KEY,"
-//                 + "nom VARCHAR(50),"
-//                 + "deviceid VARCHAR(50),"
-//                 + "type VARCHAR(50),"
-//                 + "typeMesure VARCHAR(50),"
-//                 + "temperature VARCHAR(10),"
-//                 + "humidity VARCHAR(10),"
-//                 + "typeAction VARCHAR(50),"
-//                 + "date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
-//                 + "status VARCHAR(10)"
-//                 + ")";
-
-//         statement.executeUpdate(createTableQuery);
-//         statement.close();
-//         System.out.println("\nTable 'gestionapp' créée avec succès !");
-//     }
-
-//     @Override
-//     public void close() throws Exception {
-//         if (connection != null && !connection.isClosed()) {
-//             connection.close();
-//             System.out.println("Connexion fermee avec succes.");
-//         }
-//     }
-// }
-
 package com.exercice2;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -86,7 +18,7 @@ public class Conn implements AutoCloseable {
             createDatabase();
         } catch (SQLException e) {
             // e.printStackTrace();
-            System.out.println("La base de données 'PROJET_GESTIONAPP' existe !");
+            // System.out.println("La base de données 'PROJET_GESTIONAPP' existe !");
         }
     }
 
@@ -98,50 +30,6 @@ public class Conn implements AutoCloseable {
             System.out.println("La base de données 'PROJET_GESTIONAPP' a été créée avec succès !");
         }
     }
-
-    // public Connection connect() {
-    //     String user = "postgres";
-    //     String password = "admin";
-    //     String url = "jdbc:postgresql://localhost:5432/projet_gestionapp";
-
-    //     try {
-    //         connection = DriverManager.getConnection(url, user, password);
-    //         if (!tableExists(connection, "gestionapp")) {
-    //             createTable(connection);
-    //         }
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //         System.out.println("Erreur de connexion à la base de données.");
-    //     }
-    //     return connection;
-    // }
-
-    // private static boolean tableExists(Connection connection, String tableName) throws SQLException {
-    //     DatabaseMetaData metadata = connection.getMetaData();
-    //     ResultSet tables = metadata.getTables(null, null, tableName, null);
-    //     return tables.next();
-    // }
-
-    // private static void createTable(Connection connection) throws SQLException {
-    //     Statement statement = connection.createStatement();
-
-    //     String createTableQuery = "CREATE TABLE gestionapp ("
-    //             + "id SERIAL PRIMARY KEY,"
-    //             + "nom VARCHAR(50),"
-    //             + "deviceid VARCHAR(50),"
-    //             + "type VARCHAR(50),"
-    //             + "typeMesure VARCHAR(50),"
-    //             + "temperature VARCHAR(10),"
-    //             + "humidity VARCHAR(10),"
-    //             + "typeAction VARCHAR(50),"
-    //             + "date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
-    //             + "status VARCHAR(10)"
-    //             + ")";
-
-    //     statement.executeUpdate(createTableQuery);
-    //     statement.close();
-    //     System.out.println("\nTable 'gestionapp' créée avec succès !");
-    // }
 
     public Connection connect() {
         String user = "postgres";
@@ -182,27 +70,39 @@ public class Conn implements AutoCloseable {
                     + "typemesure VARCHAR(50),"
                     + "typeaction VARCHAR(50)"
                     + ")");
-
+    
             state.execute("CREATE TABLE Capteur ("
                     + "capteur_id SERIAL PRIMARY KEY,"
                     + "objet_id INT,"
                     + "status VARCHAR(10),"
-                    + "reading_value DECIMAL(10, 2),"
-                    + "timestamp TIMESTAMP,"
+                    + "temperature DECIMAL(10, 2),"
+                    + "humidite DECIMAL(10, 2),"
+                    + "son DECIMAL(10, 2),"
+                    + "distance DECIMAL(10, 2),"
+                    + "lumiere DECIMAL(10, 2),"
+                    + "formatted_date VARCHAR(50),"
+                    + "formatted_time VARCHAR(50),"
                     + "FOREIGN KEY (objet_id) REFERENCES ObjetConnecte(objet_id)"
                     + ")");
-
+    
+            state.execute("ALTER TABLE capteur DROP CONSTRAINT IF EXISTS capteur_objet_id_fkey");
+            state.execute("ALTER TABLE capteur ADD CONSTRAINT capteur_objet_id_fkey "
+                    + "FOREIGN KEY (objet_id) REFERENCES ObjetConnecte(objet_id) ON DELETE CASCADE");
+    
             state.execute("CREATE TABLE Actionneur ("
                     + "actionneur_id SERIAL PRIMARY KEY,"
                     + "objet_id INT,"
                     + "status VARCHAR(10),"
-                    + "timestamp TIMESTAMP,"
+                    + "formatted_date VARCHAR(50),"
+                    + "formatted_time VARCHAR(50),"
                     + "FOREIGN KEY (objet_id) REFERENCES ObjetConnecte(objet_id)"
                     + ")");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Erreur lors de la création des tables.");
         }
+    
+        catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Erreur lors de la création des tables.");
+            }
     }
 
     @Override
