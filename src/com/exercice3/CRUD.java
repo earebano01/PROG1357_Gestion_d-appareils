@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-
 public class CRUD {
 
     public static int insertObjetConnecte(String nom, String device_id, String type, String typemesure, String typeaction) {
@@ -352,6 +351,4 @@ public class CRUD {
         return resultString.toString();
     }
     
-    
-
 }

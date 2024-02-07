@@ -184,7 +184,7 @@ public class GestionApp {
                             for (ObjetConnecte obj : dataStack) {
                                 if (obj instanceof Capteur) {
                                     ((Capteur) obj).capteurAll();
-                                    // System.out.println("\n");
+                                    System.out.println("\n");
                                 }
                             }
 
@@ -192,7 +192,7 @@ public class GestionApp {
                             for (ObjetConnecte obj : dataQueue) {
                                 if (obj instanceof Actuateur) {
                                     ((Actuateur) obj).actionneurInfo();
-                                    // System.out.println("\n");
+                                    System.out.println("\n");
                                 }
                             }
 
