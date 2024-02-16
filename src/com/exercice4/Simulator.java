@@ -17,4 +17,19 @@ public class Simulator {
         double humidity = 40 + random.nextDouble() * 20;
         return Double.parseDouble(String.format("%.2f", humidity));
     }
+
+    public int readLight() {
+        int light = random.nextInt(1024);
+        return light;
+    }
+
+    public int readSound() {
+        int sound = random.nextInt(1024);
+        return sound;
+    }
+
+    public double readDistance() {
+        double distance = 0.1 + random.nextDouble() * 5;
+        return Double.parseDouble(String.format("%.2f", distance));
+    }
 }

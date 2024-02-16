@@ -16,6 +16,8 @@ import com.exercice4.Simulator;
 import com.exercice4.Capteur;
 import com.exercice4.Actuateur;
 
+
+
 public class GestionApp {
     public static void main(String args[]) {
         try (Conn conn = new Conn()) {
@@ -58,11 +60,13 @@ public class GestionApp {
                             String formattedDate = date.format(dateFormatter);
                             String formattedTime = time.format(timeFormatter);
                             String status = Validation.statusInput(in);
-                            Double temperature = sim.readTemperature();
-                            Double humidite = sim.readHumidity();
-                            Double son = 0.0;
+                            // Double temperature = sim.readTemperature();
+                            // Double humidite = sim.readHumidity();
+                            Double temperature = 0.0;
+                            Double humidite = 0.0;
+                            int son = 0;
                             Double distance = 0.0;
-                            Double lumiere = 0.0;
+                            int lumiere = 0;
 
                             System.out.println("\nVoulez-vous ajouter un capteur (1) ou un actionneur (2) ?");
                             int appareilType = in.nextInt();
@@ -99,17 +103,17 @@ public class GestionApp {
                                         break;
                                     case 4:
                                         typeMesure = "Son";
-                                        son = 0.0;
+                                        son = sim.readSound();
                                         break;
 
                                     case 5:
                                         typeMesure = "Distance";
-                                        distance = 0.0;
+                                        distance = sim.readDistance();
                                         break;
 
                                     case 6:
                                         typeMesure = "Lumiere";
-                                        lumiere = 0.0;
+                                        lumiere = sim.readLight();
                                         break;
                                     default:
                                         System.out.println("Choix non valide. Veuillez choisir entre 1 a 6.");
