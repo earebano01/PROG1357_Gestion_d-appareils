@@ -88,7 +88,7 @@ public class Conn implements AutoCloseable {
             state.execute("ALTER TABLE capteur DROP CONSTRAINT IF EXISTS capteur_objet_id_fkey");
             state.execute("ALTER TABLE capteur ADD CONSTRAINT capteur_objet_id_fkey "
                     + "FOREIGN KEY (objet_id) REFERENCES ObjetConnecte(objet_id) ON DELETE CASCADE");
-    
+            
             state.execute("CREATE TABLE Actionneur ("
                     + "actionneur_id SERIAL PRIMARY KEY,"
                     + "objet_id INT,"
@@ -97,6 +97,10 @@ public class Conn implements AutoCloseable {
                     + "formatted_time VARCHAR(50),"
                     + "FOREIGN KEY (objet_id) REFERENCES ObjetConnecte(objet_id)"
                     + ")");
+
+            state.execute("ALTER TABLE actionneur DROP CONSTRAINT IF EXISTS actionneur_objet_id_fkey");
+            state.execute("ALTER TABLE actionneur ADD CONSTRAINT actionneur_objet_id_fkey "
+                    + "FOREIGN KEY (objet_id) REFERENCES ObjetConnecte(objet_id) ON DELETE CASCADE");
         }
     
         catch (SQLException e) {

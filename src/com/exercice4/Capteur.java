@@ -4,13 +4,13 @@ public class Capteur extends ObjetConnecte {
     public String typeMesure;
     public Double temperature; 
     public Double humidite; 
-    public Double son; 
+    public int son; 
     public Double distance; 
-    public Double lumiere; 
+    public int lumiere; 
     public String formattedDate;
     public String formattedTime;
 
-    public Capteur(String nom, String deviceID, String type, String typeMesure, Double temperature, Double humidite, Double son, Double distance, Double lumiere, String formattedDate, String formattedTime, String status) {
+    public Capteur(String nom, String deviceID, String type, String typeMesure, Double temperature, Double humidite, int son, Double distance, int lumiere, String formattedDate, String formattedTime, String status) {
         super(nom, deviceID, type, typeMesure, temperature, humidite, son, distance, lumiere, null, formattedDate, formattedTime, status);
         this.typeMesure = typeMesure;
         this.temperature = temperature;

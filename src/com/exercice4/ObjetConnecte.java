@@ -7,15 +7,15 @@ public class ObjetConnecte {
     public String typeMesure;
     public Double temperature; 
     public Double humidite; 
-    public Double son; 
+    public int son; 
     public Double distance; 
-    public Double lumiere; 
+    public int lumiere; 
     public String formattedDate;
     public String formattedTime;
     public String typeAction;
     public String status;
 
-    public ObjetConnecte(String nom, String deviceID, String type, String typeMesure, Double temperature, Double humidite, Double son, Double distance, Double lumiere, String typeAction, String formattedDate, String formattedTime, String status) {
+    public ObjetConnecte(String nom, String deviceID, String type, String typeMesure, Double temperature, Double humidite, int son, Double distance, int lumiere, String typeAction, String formattedDate, String formattedTime, String status) {
         this.nom = nom;
         this.deviceID = deviceID;
         this.type = type;

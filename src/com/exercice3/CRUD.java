@@ -46,7 +46,7 @@ public class CRUD {
         return objet_id;
     }
     
-    public static void insertCapteur(int objet_id, String status, Double temperature, Double humidite, Double son, Double distance, Double lumiere, String formatted_date, String formatted_time) {
+    public static void insertCapteur(int objet_id, String status, Double temperature, Double humidite, int son, Double distance, int lumiere, String formatted_date, String formatted_time) {
         try (Conn conn = new Conn()) {
             try {
                 String insertQuery = "INSERT INTO Capteur(objet_id, status, temperature, humidite, son, distance, lumiere, formatted_date, formatted_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -226,9 +226,9 @@ public class CRUD {
     
     public static String toStringAB(ResultSet resultSet) {
         StringBuilder resultString = new StringBuilder();
-        resultString.append("-------------------------------------------------------------------------------------------------------------\n");
-        resultString.append(String.format("| %-21s | %-13s | %-20s | %-18s | %-21s |\n", "Nom", "Device ID", "Type", "Type Mesure", "Type Action"));
-        resultString.append("-------------------------------------------------------------------------------------------------------------\n");
+        resultString.append("------------------------------------------------------------------------------------------------------------------\n");
+        resultString.append(String.format("| %-21s | %-13s | %-20s | %-23s | %-21s |\n", "Nom", "Device ID", "Type", "Type Mesure", "Type Action"));
+        resultString.append("------------------------------------------------------------------------------------------------------------------\n");
     
         try {
             while (resultSet.next()) {
@@ -238,9 +238,9 @@ public class CRUD {
                 String typeMesure = resultSet.getString("typemesure");
                 String typeAction = resultSet.getString("typeaction");
     
-                resultString.append(String.format("| %-21s | %-13s | %-20s | %-18s | %-21s |\n", nom, deviceid, type, typeMesure, typeAction));
+                resultString.append(String.format("| %-21s | %-13s | %-20s | %-23s | %-21s |\n", nom, deviceid, type, typeMesure, typeAction));
             }
-            resultString.append("-------------------------------------------------------------------------------------------------------------\n");
+            resultString.append("------------------------------------------------------------------------------------------------------------------\n");
     
             resultSet.close();
         } catch (SQLException e) {
@@ -273,9 +273,9 @@ public class CRUD {
     
     public static String toStringCA(ResultSet resultSet) {
         StringBuilder resultString = new StringBuilder();
-        resultString.append("-------------------------------------------------------------------------------------------------------------\n");
+        resultString.append("------------------------------------------------------------------------------------------------------------------\n");
         resultString.append(String.format("| %-21s | %-13s | %-20s | %-10s | %-12s | %-10s | %-10s | %-12s | %-10s | %-12s | %-12s |\n", "Nom", "Device ID", "Type", "Status", "Temperature", "Humidite", "Son", "Distance", "Lumiere", "Date", "Time"));
-        resultString.append("-------------------------------------------------------------------------------------------------------------\n");
+        resultString.append("------------------------------------------------------------------------------------------------------------------\n");
     
         try {
             while (resultSet.next()) {
@@ -303,11 +303,11 @@ public class CRUD {
     
         return resultString.toString();
     }
-    
+
     public static void readAC() {
         try (Conn conn = new Conn()) {
             try {
-                String selectQuery = "SELECT * FROM Actionneur";
+                String selectQuery = "SELECT c.nom, c.device_id, c.type, c.typeaction, a.status, a.formatted_date, a.formatted_time FROM ObjetConnecte c INNER JOIN Actionneur a ON c.objet_id = a.objet_id";
                 PreparedStatement preparedStatement = conn.connect().prepareStatement(selectQuery);
                 ResultSet resultSet = preparedStatement.executeQuery();
     
@@ -326,21 +326,23 @@ public class CRUD {
     
     public static String toStringAC(ResultSet resultSet) {
         StringBuilder resultString = new StringBuilder();
-        resultString.append("--------------------------------------------------------------------------------------\n");
-        resultString.append(String.format("| %-14s | %-10s | %-15s | %-17s | %-14s |\n", "Actionneur ID", "Objet ID", "Status", "Date", "Time"));
-        resultString.append("--------------------------------------------------------------------------------------\n");
+        resultString.append("----------------------------------------------------------------------------------------------------------------------------------\n");
+        resultString.append(String.format("| %-21s | %-13s | %-20s | %-20s | %-10s | %-12s | %-12s |\n", "Nom", "Device ID", "Type", "Type Action", "Status", "Date", "Time"));
+        resultString.append("----------------------------------------------------------------------------------------------------------------------------------\n");
     
         try {
             while (resultSet.next()) {
-                int actionneurId = resultSet.getInt("actionneur_id");
-                int objetId = resultSet.getInt("objet_id");
+                String nom = resultSet.getString("nom");
+                String deviceid = resultSet.getString("device_id");
+                String type = resultSet.getString("type");
+                String typeaction = resultSet.getString("typeaction");
                 String status = resultSet.getString("status");
                 String formattedDate = resultSet.getString("formatted_date");
                 String formattedTime = resultSet.getString("formatted_time");
     
-                resultString.append(String.format("| %-14d | %-10d | %-15s | %-17s | %-14s |\n", actionneurId, objetId, status, formattedDate, formattedTime));
+                resultString.append(String.format("| %-21s | %-13s | %-20s | %-20s | %-10s | %-12s | %-12s |\n", nom, deviceid, type, typeaction, status, formattedDate, formattedTime));
             }
-            resultString.append("--------------------------------------------------------------------------------------\n");
+            resultString.append("----------------------------------------------------------------------------------------------------------------------------------\n");
     
             resultSet.close();
         } catch (SQLException e) {
@@ -352,5 +354,4 @@ public class CRUD {
     }
     
     
-
 }
