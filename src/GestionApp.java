@@ -60,8 +60,6 @@ public class GestionApp {
                             String formattedDate = date.format(dateFormatter);
                             String formattedTime = time.format(timeFormatter);
                             String status = Validation.statusInput(in);
-                            // Double temperature = sim.readTemperature();
-                            // Double humidite = sim.readHumidity();
                             Double temperature = 0.0;
                             Double humidite = 0.0;
                             int son = 0;
@@ -233,19 +231,19 @@ public class GestionApp {
                                 System.out.println(
                                         "Insertion annulee. Les donnees ne sont pas inserees dans la base de donnees.");
                             }
-
                             break;
 
                         case 3:
-                            System.out.print("Entrez le nom de l'appareil a supprimer : ");
-
+                            System.out.print("Entrez le nom de l'appareil à supprimer : ");
                             String nomToDelete = in.nextLine();
                             if (!NomExists.nomExists(nomToDelete)) {
-                                System.out.println("Appareil inexistant. La mise a jour a echoue.");
+                                System.out.println("Appareil inexistant. La suppression a échoué.");
                             } else {
                                 CRUD.deleteData(nomToDelete);
                             }
+                            
                             break;
+                            
 
                         case 4:
                             System.out.println("\nVoulez-vous modifier un capteur (1) ou un actionneur (2) ?");
