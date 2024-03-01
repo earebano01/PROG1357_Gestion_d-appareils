@@ -35,7 +35,6 @@ public class GestionApp {
             Stack<ObjetConnecte> dataStack = new Stack<>();
             Queue<ObjetConnecte> dataQueue = new LinkedList<>();
             Simulator sim = new Simulator();
-            // Stack<String> dataReceived = new Stack<>();
             DataApiHandler dataApiHandler = new DataApiHandler(dataReceived);
 
             while (true) {
