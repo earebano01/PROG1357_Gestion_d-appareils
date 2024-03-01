@@ -6,7 +6,9 @@ import java.util.Stack;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.net.InetSocketAddress;
 
+import com.sun.net.httpserver.HttpServer;
 import com.exercice1.NomExists;
 import com.exercice1.Validation;
 import com.exercice2.Conn;
@@ -15,27 +17,37 @@ import com.exercice4.ObjetConnecte;
 import com.exercice4.Simulator;
 import com.exercice4.Capteur;
 import com.exercice4.Actuateur;
+import com.exercice5.DataApiHandler;
 
 
 
 public class GestionApp {
     public static void main(String args[]) {
         try (Conn conn = new Conn()) {
+            Stack<String> dataReceived = new Stack<>();
+            InetSocketAddress address = new InetSocketAddress("0.0.0.0", 8080);
+            HttpServer server = HttpServer.create(address, 0);
+            server.createContext("/api/data", new DataApiHandler(dataReceived));
+            server.start();
+            System.out.println("Server started at " + address);
 
             Scanner in = new Scanner(System.in);
             Stack<ObjetConnecte> dataStack = new Stack<>();
             Queue<ObjetConnecte> dataQueue = new LinkedList<>();
             Simulator sim = new Simulator();
+            // Stack<String> dataReceived = new Stack<>();
+            DataApiHandler dataApiHandler = new DataApiHandler(dataReceived);
 
             while (true) {
                 try {
                     System.out.println("\nVeuillez selectionner une option :");
-                    System.out.println("1. Ajouter un nouvel appareil");
-                    System.out.println("2. Verify des donnees et sauvegarde");
-                    System.out.println("3. Retirer un appareil");
-                    System.out.println("4. Modifier un appareil");
-                    System.out.println("5. Afficher tous les appareil");
-                    System.out.println("6. Sortie");
+                    System.out.println("1. Voir les données disponibles");
+                    System.out.println("2. Ajouter un nouvel appareil");
+                    System.out.println("3. Verify des donnees et sauvegarde");
+                    System.out.println("4. Retirer un appareil");
+                    System.out.println("5. Modifier un appareil");
+                    System.out.println("6. Afficher tous les appareil");
+                    System.out.println("7. Sortie");
                     System.out.println("");
                     System.out.print("Saisissez votre choix : ");
                     int mainChoix = in.nextInt();
@@ -45,6 +57,10 @@ public class GestionApp {
 
                     switch (mainChoix) {
                         case 1:
+                        System.out.println(dataApiHandler.viewAvailableData());
+                        break;
+
+                        case 2:
                             System.out.println("=========================================");
                             System.out.println("Entrez les informations pour l'appareil");
                             System.out.println("=========================================");
@@ -181,7 +197,7 @@ public class GestionApp {
 
                             break;
 
-                        case 2:
+                        case 3:
                             System.out.println("\n=== Donnees dans le Pile ===");
                             for (ObjetConnecte obj : dataStack) {
                                 if (obj instanceof Capteur) {
@@ -233,7 +249,7 @@ public class GestionApp {
                             }
                             break;
 
-                        case 3:
+                        case 4:
                             System.out.print("Entrez le nom de l'appareil à supprimer : ");
                             String nomToDelete = in.nextLine();
                             if (!NomExists.nomExists(nomToDelete)) {
@@ -245,7 +261,7 @@ public class GestionApp {
                             break;
                             
 
-                        case 4:
+                        case 5:
                             System.out.println("\nVoulez-vous modifier un capteur (1) ou un actionneur (2) ?");
                             int majChoix = in.nextInt();
                             in.nextLine();
@@ -356,7 +372,7 @@ public class GestionApp {
                             }
                         break;
 
-                        case 5:
+                        case 6:
                             System.out.println("\nQuel tableau voulez-vous voir ?");
                             System.out.println("1. Objet Connecte");
                             System.out.println("2. Capteur");
@@ -380,7 +396,7 @@ public class GestionApp {
                             }
                             break;
 
-                        case 6:
+                        case 7:
                             System.out.println("Fin du programme.");
                             System.out.println("");
                             System.exit(0);
