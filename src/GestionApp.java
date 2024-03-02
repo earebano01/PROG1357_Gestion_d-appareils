@@ -8,8 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.net.InetSocketAddress;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import com.sun.net.httpserver.HttpServer;
 import com.exercice1.NomExists;
@@ -445,22 +443,5 @@ public class GestionApp {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private static String fetchDataFromApi(String apiUrl) throws Exception {
-        URL url = new URL(apiUrl);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.connect();
-        
-        // Read the response from the API
-        Scanner scanner = new Scanner(conn.getInputStream());
-        StringBuilder jsonData = new StringBuilder();
-        while (scanner.hasNextLine()) {
-            jsonData.append(scanner.nextLine());
-        }
-        scanner.close();
-        
-        return jsonData.toString();
     }
 }
