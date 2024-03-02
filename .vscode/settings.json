@@ -6,6 +6,8 @@
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
         "c:\\Users\\adoni\\Downloads\\postgresql-42.7.0.jar",
-        "c:\\Users\\adoni\\Downloads\\Session 04 - Automne (Sep - Dec 2023)\\postgresql-42.7.0.jar"
+        "c:\\Users\\adoni\\Downloads\\Session 04 - Automne (Sep - Dec 2023)\\postgresql-42.7.0.jar",
+        "c:\\Users\\adoni\\Documents\\CCNB\\Session 05 - Hiver (Jan - Apr 2024)\\PROG1357\\Autres\\gson-2.10.1.jar",
+        "c:\\Users\\adoni\\Documents\\CCNB\\Session 05 - Hiver (Jan - Apr 2024)\\PROG1357\\Autres\\json-20240205.jar"
     ]
 }

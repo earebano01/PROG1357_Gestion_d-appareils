@@ -3,10 +3,13 @@ import java.util.Scanner;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.net.InetSocketAddress;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import com.sun.net.httpserver.HttpServer;
 import com.exercice1.NomExists;
@@ -18,24 +21,25 @@ import com.exercice4.Simulator;
 import com.exercice4.Capteur;
 import com.exercice4.Actuateur;
 import com.exercice5.DataApiHandler;
+import com.google.gson.JsonObject;
 
 
 
 public class GestionApp {
     public static void main(String args[]) {
         try (Conn conn = new Conn()) {
-            Stack<String> dataReceived = new Stack<>();
-            InetSocketAddress address = new InetSocketAddress("0.0.0.0", 8080);
-            HttpServer server = HttpServer.create(address, 0);
-            server.createContext("/api/data", new DataApiHandler(dataReceived));
-            server.start();
-            System.out.println("Server started at " + address);
+        Stack<List<JsonObject>> dataReceived = new Stack<>();
+        DataApiHandler dataApiHandler = new DataApiHandler(dataReceived);
+        InetSocketAddress address = new InetSocketAddress("0.0.0.0", 8080);
+        HttpServer server = HttpServer.create(address, 0);
+        server.createContext("/api/data", dataApiHandler);
+        server.start();
+        System.out.println("Server started at " + address);
 
-            Scanner in = new Scanner(System.in);
-            Stack<ObjetConnecte> dataStack = new Stack<>();
-            Queue<ObjetConnecte> dataQueue = new LinkedList<>();
-            Simulator sim = new Simulator();
-            DataApiHandler dataApiHandler = new DataApiHandler(dataReceived);
+        Scanner in = new Scanner(System.in);
+        Stack<ObjetConnecte> dataStack = new Stack<>();
+        Queue<ObjetConnecte> dataQueue = new LinkedList<>();
+        Simulator sim = new Simulator();
 
             while (true) {
                 try {
@@ -65,7 +69,6 @@ public class GestionApp {
                             System.out.println("=========================================");
 
                             String nom = Validation.nomInput(in);
-                            String deviceid = Validation.deviceIDInput(in);
                             String type = Validation.typeInput(in);
                             LocalDate date = LocalDate.now();
                             LocalTime time = LocalTime.now();
@@ -75,15 +78,24 @@ public class GestionApp {
                             String formattedDate = date.format(dateFormatter);
                             String formattedTime = time.format(timeFormatter);
                             String status = Validation.statusInput(in);
-                            Double temperature = 0.0;
-                            Double humidite = 0.0;
-                            int son = 0;
-                            Double distance = 0.0;
-                            int lumiere = 0;
+
+                            String jsonDataFromApi = dataApiHandler.viewAvailableData();
+                    
+                            if (jsonDataFromApi.isEmpty() || jsonDataFromApi.equals("Aucune donnee disponible. Veuillez reessayer apres avoir recu des donnees.")) {
+                                System.out.println("Les donnees JSON sont vides ou null. Veuillez reessayer.");
+                                return;
+                            }
 
                             System.out.println("\nVoulez-vous ajouter un capteur (1) ou un actionneur (2) ?");
                             int appareilType = in.nextInt();
                             in.nextLine();
+                            String typeMesure = "";
+                            Double temperature = 0.0;
+                            Double humidity = 0.0;
+                            int sound = 0;
+                            Double distance = 0.0;
+                            int photoresistor = 0;
+                            String deviceid = "";
 
                             if (appareilType == 1) {
                                 System.out.println("\nMenu Type de Mesure :");
@@ -98,46 +110,65 @@ public class GestionApp {
                                 int mesureChoice = in.nextInt();
                                 in.nextLine();
                             
-                                String typeMesure = "";
                             
+                            if (!jsonDataFromApi.isEmpty()) {
                                 switch (mesureChoice) {
                                     case 1:
                                         typeMesure = "Temperature";
-                                        temperature = sim.readTemperature();
+                                        JsonObject temperatureData = dataApiHandler.extractTemperatureData(jsonDataFromApi);
+                                        if (temperatureData != null) {
+                                            temperature = temperatureData.get("temperature").getAsDouble();
+                                            deviceid = temperatureData.get("deviceid").getAsString();
+                                        }
                                         break;
                                     case 2:
                                         typeMesure = "Humidite";
-                                        humidite = sim.readHumidity();
+                                        JsonObject humidityData = dataApiHandler.extractHumidityData(jsonDataFromApi);
+                                        if (humidityData != null) {
+                                            humidity = humidityData.get("humidity").getAsDouble();
+                                            deviceid = humidityData.get("deviceid").getAsString();
+                                        }
                                         break;
                                     case 3:
                                         typeMesure = "Temperature & Humidite";
-                                        temperature = sim.readTemperature();
-                                        humidite = sim.readHumidity();
+                                        JsonObject temperatureHumidityData = dataApiHandler.extractTemperatureHumidityData(jsonDataFromApi);
+                                        if (temperatureHumidityData != null) {
+                                            temperature = temperatureHumidityData.get("temperature").getAsDouble();
+                                            humidity = temperatureHumidityData.get("humidity").getAsDouble();
+                                            deviceid = temperatureHumidityData.get("deviceid").getAsString();
+                                        }
                                         break;
                                     case 4:
                                         typeMesure = "Son";
-                                        son = sim.readSound();
+                                        JsonObject soundData = dataApiHandler.extractSoundData(jsonDataFromApi);
+                                        if (soundData != null) {
+                                            sound = soundData.get("sound").getAsInt();
+                                            deviceid = soundData.get("deviceid").getAsString();
+                                        }
                                         break;
 
                                     case 5:
                                         typeMesure = "Distance";
-                                        distance = sim.readDistance();
                                         break;
 
                                     case 6:
                                         typeMesure = "Lumiere";
-                                        lumiere = sim.readLight();
+                                        JsonObject lightData = dataApiHandler.extractPhotoresistorData(jsonDataFromApi);
+                                        if (lightData != null) {
+                                            photoresistor = lightData.get("photoresistor").getAsInt();
+                                            deviceid = lightData.get("deviceid").getAsString();
+                                        }
                                         break;
                                     default:
                                         System.out.println("Choix non valide. Veuillez choisir entre 1 a 6.");
                                         return;
                                 }
-                    
+                            }
                                 System.out.println("\n=========================================");
                                 System.out.println("Informations sur le capteur insere");
                                 System.out.println("=========================================");
                     
-                                ObjetConnecte capteur = new Capteur(nom, deviceid, type, typeMesure, temperature, humidite, son, distance, lumiere, formattedDate, formattedTime, status);
+                                ObjetConnecte capteur = new Capteur(nom, deviceid, type, typeMesure, temperature, humidity, sound, distance, photoresistor, formattedDate, formattedTime, status);
                                 capteur.capteurInfo();
                                 ((Capteur) capteur).mesurer(sim);
                                 dataStack.push(capteur);
@@ -414,5 +445,22 @@ public class GestionApp {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static String fetchDataFromApi(String apiUrl) throws Exception {
+        URL url = new URL(apiUrl);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.connect();
+        
+        // Read the response from the API
+        Scanner scanner = new Scanner(conn.getInputStream());
+        StringBuilder jsonData = new StringBuilder();
+        while (scanner.hasNextLine()) {
+            jsonData.append(scanner.nextLine());
+        }
+        scanner.close();
+        
+        return jsonData.toString();
     }
 }

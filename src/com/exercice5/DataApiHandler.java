@@ -1,17 +1,27 @@
 package com.exercice5;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 
 public class DataApiHandler implements HttpHandler {
-    private Stack<String> dataStack;
+    private Stack<List<JsonObject>> dataStack;
+    private double temperature;
+    private double humidity;
+    private int photoresistor;
+    private int sound;
+    private String deviceId;
 
-    public DataApiHandler(Stack<String> dataStack) {
+    public DataApiHandler(Stack<List<JsonObject>> dataStack) {
         this.dataStack = dataStack;
     }
 
@@ -26,13 +36,16 @@ public class DataApiHandler implements HttpHandler {
             Scanner scanner = new Scanner(exchange.getRequestBody());
             StringBuilder requestData = new StringBuilder();
             while (scanner.hasNextLine()) {
-                requestData.append(scanner.nextLine());
+                String line = scanner.nextLine();
+                if (!line.isEmpty()) {
+                    JsonObject jsonData = parseJsonObject(line);
+                    receiveData(jsonData);
+                }
             }
             scanner.close();
-            receiveData(requestData.toString()); 
             response = "Objet connecte ajoute.";
         } else {
-            status = 405; 
+            status = 405;
             response = "Methode non autorisee";
         }
 
@@ -42,23 +55,119 @@ public class DataApiHandler implements HttpHandler {
         os.close();
     }
 
-    public void receiveData(String newData) {
+    private JsonObject parseJsonObject(String jsonObject) {
+        return JsonParser.parseString(jsonObject).getAsJsonObject();
+    }
+
+    public void receiveData(JsonObject newData) {
+        List<JsonObject> dataList = new ArrayList<>();
+        dataList.add(newData);
+
         if (dataStack.size() >= 10) {
             dataStack.remove(0);
         }
-        dataStack.add(newData);
+        dataStack.push(dataList);
     }
 
     public String viewAvailableData() {
         StringBuilder responseData = new StringBuilder();
-        responseData.append("Donnees recues :\n");
         if (!dataStack.isEmpty()) {
-            for (String data : dataStack) {
-                responseData.append(data).append("\n");
+            for (List<JsonObject> dataList : dataStack) {
+                for (JsonObject jsonObject : dataList) {
+                    responseData.append(jsonObject.toString()).append("\n");
+                }
             }
         } else {
             responseData.append("Aucune donnee disponible. Veuillez reessayer apres avoir recu des donnees.");
         }
         return responseData.toString();
     }
+
+    public JsonObject extractTemperatureData(String jsonData) {
+    String[] jsonObjects = jsonData.split("\n");
+
+    for (String jsonObjectString : jsonObjects) {
+        try {
+            JsonObject jsonObject = JsonParser.parseString(jsonObjectString).getAsJsonObject();
+            if (jsonObject.has("deviceid") && jsonObject.has("temperature")) {
+                return jsonObject;
+            }
+        } catch (JsonSyntaxException e) {
+            System.err.println("Malformed JSON: " + jsonObjectString);
+        }
+    }
+
+    return null; 
+}
+
+    
+public JsonObject extractHumidityData(String jsonData) {
+    String[] jsonObjects = jsonData.split("\n");
+
+    for (String jsonObjectString : jsonObjects) {
+        try {
+            JsonObject jsonObject = JsonParser.parseString(jsonObjectString).getAsJsonObject();
+            if (jsonObject.has("deviceid") && jsonObject.has("humidity")) {
+                return jsonObject;
+            }
+        } catch (JsonSyntaxException e) {
+            System.err.println("Malformed JSON: " + jsonObjectString);
+        }
+    }
+
+    return null; 
+}
+
+public JsonObject extractTemperatureHumidityData(String jsonData) {
+    String[] jsonObjects = jsonData.split("\n");
+
+    for (String jsonObjectString : jsonObjects) {
+        try {
+            JsonObject jsonObject = JsonParser.parseString(jsonObjectString).getAsJsonObject();
+            if (jsonObject.has("deviceid") && jsonObject.has("temperature") && jsonObject.has("humidity")) {
+                return jsonObject;
+            }
+        } catch (JsonSyntaxException e) {
+            System.err.println("Malformed JSON: " + jsonObjectString);
+        }
+    }
+
+    return null; 
+}
+
+public JsonObject extractSoundData(String jsonData) {
+    String[] jsonObjects = jsonData.split("\n");
+
+    for (String jsonObjectString : jsonObjects) {
+        try {
+            JsonObject jsonObject = JsonParser.parseString(jsonObjectString).getAsJsonObject();
+            if (jsonObject.has("deviceid") && jsonObject.has("sound")) {
+                return jsonObject;
+            }
+        } catch (JsonSyntaxException e) {
+            System.err.println("Malformed JSON: " + jsonObjectString);
+        }
+    }
+
+    return null; 
+}
+
+public JsonObject extractPhotoresistorData(String jsonData) {
+    String[] jsonObjects = jsonData.split("\n");
+
+    for (String jsonObjectString : jsonObjects) {
+        try {
+            JsonObject jsonObject = JsonParser.parseString(jsonObjectString).getAsJsonObject();
+            if (jsonObject.has("deviceid") && jsonObject.has("photoresistor")) {
+                return jsonObject;
+            }
+        } catch (JsonSyntaxException e) {
+            System.err.println("Malformed JSON: " + jsonObjectString);
+        }
+    }
+
+    return null; 
+}
+
+    
 }
