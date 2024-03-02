@@ -83,7 +83,7 @@ public class DataApiHandler implements HttpHandler {
         return responseData.toString();
     }
 
-    public JsonObject extractTemperatureData(String jsonData) {
+    public JsonObject exTempData(String jsonData) {
     String[] jsonObjects = jsonData.split("\n");
 
     for (String jsonObjectString : jsonObjects) {
@@ -101,7 +101,7 @@ public class DataApiHandler implements HttpHandler {
 }
 
     
-public JsonObject extractHumidityData(String jsonData) {
+public JsonObject extHumData(String jsonData) {
     String[] jsonObjects = jsonData.split("\n");
 
     for (String jsonObjectString : jsonObjects) {
@@ -118,7 +118,7 @@ public JsonObject extractHumidityData(String jsonData) {
     return null; 
 }
 
-public JsonObject extractTemperatureHumidityData(String jsonData) {
+public JsonObject extTempHumData(String jsonData) {
     String[] jsonObjects = jsonData.split("\n");
 
     for (String jsonObjectString : jsonObjects) {
@@ -135,7 +135,7 @@ public JsonObject extractTemperatureHumidityData(String jsonData) {
     return null; 
 }
 
-public JsonObject extractSoundData(String jsonData) {
+public JsonObject exSonData(String jsonData) {
     String[] jsonObjects = jsonData.split("\n");
 
     for (String jsonObjectString : jsonObjects) {
@@ -152,7 +152,7 @@ public JsonObject extractSoundData(String jsonData) {
     return null; 
 }
 
-public JsonObject extractPhotoresistorData(String jsonData) {
+public JsonObject exPhotoData(String jsonData) {
     String[] jsonObjects = jsonData.split("\n");
 
     for (String jsonObjectString : jsonObjects) {

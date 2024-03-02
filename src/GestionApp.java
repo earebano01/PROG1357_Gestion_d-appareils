@@ -115,7 +115,7 @@ public class GestionApp {
                                 switch (mesureChoice) {
                                     case 1:
                                         typeMesure = "Temperature";
-                                        JsonObject temperatureData = dataApiHandler.extractTemperatureData(jsonDataFromApi);
+                                        JsonObject temperatureData = dataApiHandler.exTempData(jsonDataFromApi);
                                         if (temperatureData != null) {
                                             temperature = temperatureData.get("temperature").getAsDouble();
                                             deviceid = temperatureData.get("deviceid").getAsString();
@@ -123,7 +123,7 @@ public class GestionApp {
                                         break;
                                     case 2:
                                         typeMesure = "Humidite";
-                                        JsonObject humidityData = dataApiHandler.extractHumidityData(jsonDataFromApi);
+                                        JsonObject humidityData = dataApiHandler.extHumData(jsonDataFromApi);
                                         if (humidityData != null) {
                                             humidity = humidityData.get("humidity").getAsDouble();
                                             deviceid = humidityData.get("deviceid").getAsString();
@@ -131,7 +131,7 @@ public class GestionApp {
                                         break;
                                     case 3:
                                         typeMesure = "Temperature & Humidite";
-                                        JsonObject temperatureHumidityData = dataApiHandler.extractTemperatureHumidityData(jsonDataFromApi);
+                                        JsonObject temperatureHumidityData = dataApiHandler.extTempHumData(jsonDataFromApi);
                                         if (temperatureHumidityData != null) {
                                             temperature = temperatureHumidityData.get("temperature").getAsDouble();
                                             humidity = temperatureHumidityData.get("humidity").getAsDouble();
@@ -140,7 +140,7 @@ public class GestionApp {
                                         break;
                                     case 4:
                                         typeMesure = "Son";
-                                        JsonObject soundData = dataApiHandler.extractSoundData(jsonDataFromApi);
+                                        JsonObject soundData = dataApiHandler.exSonData(jsonDataFromApi);
                                         if (soundData != null) {
                                             sound = soundData.get("sound").getAsInt();
                                             deviceid = soundData.get("deviceid").getAsString();
@@ -153,7 +153,7 @@ public class GestionApp {
 
                                     case 6:
                                         typeMesure = "Lumiere";
-                                        JsonObject lightData = dataApiHandler.extractPhotoresistorData(jsonDataFromApi);
+                                        JsonObject lightData = dataApiHandler.exPhotoData(jsonDataFromApi);
                                         if (lightData != null) {
                                             photoresistor = lightData.get("photoresistor").getAsInt();
                                             deviceid = lightData.get("deviceid").getAsString();
