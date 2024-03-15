@@ -22,7 +22,6 @@ import com.exercice5.DataApiHandler;
 import com.google.gson.JsonObject;
 
 
-
 public class GestionApp {
     public static void main(String args[]) {
         try (Conn conn = new Conn()) {
@@ -44,7 +43,7 @@ public class GestionApp {
                     System.out.println("\nVeuillez selectionner une option :");
                     System.out.println("1. Voir les données disponibles");
                     System.out.println("2. Ajouter un nouvel appareil");
-                    System.out.println("3. Verify des donnees et sauvegarde");
+                    System.out.println("3. Verification des donnees et sauvegarde");
                     System.out.println("4. Retirer un appareil");
                     System.out.println("5. Modifier un appareil");
                     System.out.println("6. Afficher tous les appareil");

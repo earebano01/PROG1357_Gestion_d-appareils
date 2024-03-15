@@ -192,9 +192,9 @@ public class CRUD {
                 ResultSet resultSet = selectStatement.executeQuery();
     
                 System.out.println("\nLes donnees suivantes vont etre supprimees :");
-                System.out.println("-----------------------------------------------------------------------------------------");
-                System.out.println("| Obj ID | Nom            | Device ID | Type | Type Mesure | Type Action |");
-                System.out.println("-----------------------------------------------------------------------------------------");
+                System.out.println("------------------------------------------------------------------------------------------------");
+                System.out.println("| Obj ID | Nom            | Device ID        | Type    | Type Mesure             | Type Action |");
+                System.out.println("------------------------------------------------------------------------------------------------");
     
                 while (resultSet.next()) {
                     int objId = resultSet.getInt("objet_id");
@@ -208,7 +208,7 @@ public class CRUD {
                             objId, name, deviceId, type, typeMesure, typeAction);
                 }
     
-                System.out.println("-----------------------------------------------------------------------------------------");
+                System.out.println("------------------------------------------------------------------------------------------------");
     
                 selectStatement.close();
     

@@ -1,23 +1,33 @@
 import requests
 import Adafruit_DHT
 import time
+from datetime import datetime, timedelta
 
 API_ENDPOINT = "http://192.168.5.199:8080/api/data"
-DHT_PIN = 4  
+DHT_PIN = 4 
 
 def read_dht11_data():
     humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT11, DHT_PIN)
     return temperature, humidity
 
 def read_deviceid():
-    deviceid = "ca492093a449d75d"  
+    deviceid = "ca492093a449d75d"
     return deviceid
 
-def send_data(deviceid, temperature, humidity):
+def get_current_date():
+    return datetime.now().strftime('%Y-%m-%d')
+
+def get_current_time():
+    current_time = datetime.now() - timedelta(hours=3)  
+    return current_time.strftime('%H:%M')
+
+def send_data(deviceid, temperature, humidity, date, time):
     data = {
         "deviceid": deviceid,
         "temperature": temperature,
-        "humidity": humidity
+        "humidity": humidity,
+        "date": date,
+        "time": time
     }
     try:
         response = requests.post(API_ENDPOINT, json=data)
@@ -32,8 +42,13 @@ if __name__ == "__main__":
     interval_seconds = 5
 
     while True:
-        deviceid = read_deviceid()
-        temperature, humidity = read_dht11_data()
-        send_data(deviceid, temperature, humidity)
+        try:
+            deviceid = read_deviceid()
+            temperature, humidity = read_dht11_data()
+            date = get_current_date()
+            time_now = get_current_time()
+            send_data(deviceid, temperature, humidity, date, time_now)
+        except Exception as e:
+            print(f"Error: {e}")
+        
         time.sleep(interval_seconds)
-
