@@ -101,7 +101,7 @@ public class DataApiHandler implements HttpHandler {
                     return jsonObject;
                 }
             } catch (JsonSyntaxException e) {
-                System.err.println("Malformed JSON: " + jsonObjectString);
+                System.err.println("JSON mal forme: " + jsonObjectString);
             }
         }
 
@@ -118,7 +118,7 @@ public class DataApiHandler implements HttpHandler {
                     return jsonObject;
                 }
             } catch (JsonSyntaxException e) {
-                System.err.println("Malformed JSON: " + jsonObjectString);
+                System.err.println("JSON mal forme: " + jsonObjectString);
             }
         }
 
@@ -135,7 +135,7 @@ public class DataApiHandler implements HttpHandler {
                     return jsonObject;
                 }
             } catch (JsonSyntaxException e) {
-                System.err.println("Malformed JSON: " + jsonObjectString);
+                System.err.println("JSON mal forme: " + jsonObjectString);
             }
         }
 
@@ -152,7 +152,7 @@ public class DataApiHandler implements HttpHandler {
                     return jsonObject;
                 }
             } catch (JsonSyntaxException e) {
-                System.err.println("Malformed JSON: " + jsonObjectString);
+                System.err.println("JSON mal forme: " + jsonObjectString);
             }
         }
 
@@ -169,7 +169,7 @@ public class DataApiHandler implements HttpHandler {
                     return jsonObject;
                 }
             } catch (JsonSyntaxException e) {
-                System.err.println("Malformed JSON: " + jsonObjectString);
+                System.err.println("JSON mal forme: " + jsonObjectString);
             }
         }
 
