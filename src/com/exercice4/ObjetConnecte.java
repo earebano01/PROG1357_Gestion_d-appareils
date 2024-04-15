@@ -14,8 +14,9 @@ public class ObjetConnecte {
     public String formattedTime;
     public String typeAction;
     public String status;
+    public String value;
 
-    public ObjetConnecte(String nom, String deviceID, String type, String typeMesure, Double temperature, Double humidite, int son, Double distance, int lumiere, String typeAction, String formattedDate, String formattedTime, String status) {
+    public ObjetConnecte(String nom, String deviceID, String type, String typeMesure, Double temperature, Double humidite, int son, Double distance, int lumiere, String typeAction, String formattedDate, String formattedTime, String status, String value) {
         this.nom = nom;
         this.deviceID = deviceID;
         this.type = type;
@@ -29,6 +30,7 @@ public class ObjetConnecte {
         this.formattedTime = formattedTime;
         this.typeAction = typeAction;
         this.status = status;
+        this.status = value;
     }
 
     public void capteurInfo() {
@@ -50,12 +52,11 @@ public class ObjetConnecte {
         System.out.println("Lumiere: " + lumiere);
         System.out.println("Date: " + formattedDate);
         System.out.println("Time: " + formattedTime);
-        System.out.println("Status: " + status);
+        // System.out.println("Status: " + status);
     }
 
     public void actionneurInfo() {
         System.out.println("Nom: " + nom);
-        System.out.println("Device ID: " + deviceID);
         System.out.println("Type: " + type);
         System.out.println("Type Action: " + typeAction);
         System.out.println("Date: " + formattedDate);

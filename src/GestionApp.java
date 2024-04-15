@@ -3,10 +3,13 @@ import java.util.Scanner;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.net.InetSocketAddress;
 
+import com.sun.net.httpserver.HttpServer;
 import com.exercice1.NomExists;
 import com.exercice1.Validation;
 import com.exercice2.Conn;
@@ -15,27 +18,36 @@ import com.exercice4.ObjetConnecte;
 import com.exercice4.Simulator;
 import com.exercice4.Capteur;
 import com.exercice4.Actuateur;
-
+import com.exercice5.DataApiHandler;
+import com.google.gson.JsonObject;
 
 
 public class GestionApp {
     public static void main(String args[]) {
         try (Conn conn = new Conn()) {
+        Stack<List<JsonObject>> dataReceived = new Stack<>();
+        DataApiHandler dataApiHandler = new DataApiHandler(dataReceived);
+        InetSocketAddress address = new InetSocketAddress("0.0.0.0", 8080);
+        HttpServer server = HttpServer.create(address, 0);
+        server.createContext("/api/data", dataApiHandler);
+        server.start();
+        System.out.println("Server started at " + address);
 
-            Scanner in = new Scanner(System.in);
-            Stack<ObjetConnecte> dataStack = new Stack<>();
-            Queue<ObjetConnecte> dataQueue = new LinkedList<>();
-            Simulator sim = new Simulator();
+        Scanner in = new Scanner(System.in);
+        Stack<ObjetConnecte> dataStack = new Stack<>();
+        Queue<ObjetConnecte> dataQueue = new LinkedList<>();
+        Simulator sim = new Simulator();
 
             while (true) {
                 try {
                     System.out.println("\nVeuillez selectionner une option :");
-                    System.out.println("1. Ajouter un nouvel appareil");
-                    System.out.println("2. Verify des donnees et sauvegarde");
-                    System.out.println("3. Retirer un appareil");
-                    System.out.println("4. Modifier un appareil");
-                    System.out.println("5. Afficher tous les appareil");
-                    System.out.println("6. Sortie");
+                    System.out.println("1. Voir les données disponibles");
+                    System.out.println("2. Ajouter un nouvel appareil");
+                    System.out.println("3. Verification des donnees et sauvegarde");
+                    System.out.println("4. Retirer un appareil");
+                    System.out.println("5. Modifier un appareil");
+                    System.out.println("6. Afficher tous les appareil");
+                    System.out.println("7. Sortie");
                     System.out.println("");
                     System.out.print("Saisissez votre choix : ");
                     int mainChoix = in.nextInt();
@@ -45,12 +57,15 @@ public class GestionApp {
 
                     switch (mainChoix) {
                         case 1:
+                        System.out.println(dataApiHandler.viewAvailableData());
+                        break;
+
+                        case 2:
                             System.out.println("=========================================");
                             System.out.println("Entrez les informations pour l'appareil");
                             System.out.println("=========================================");
 
                             String nom = Validation.nomInput(in);
-                            String deviceid = Validation.deviceIDInput(in);
                             String type = Validation.typeInput(in);
                             LocalDate date = LocalDate.now();
                             LocalTime time = LocalTime.now();
@@ -60,17 +75,26 @@ public class GestionApp {
                             String formattedDate = date.format(dateFormatter);
                             String formattedTime = time.format(timeFormatter);
                             String status = Validation.statusInput(in);
-                            // Double temperature = sim.readTemperature();
-                            // Double humidite = sim.readHumidity();
-                            Double temperature = 0.0;
-                            Double humidite = 0.0;
-                            int son = 0;
-                            Double distance = 0.0;
-                            int lumiere = 0;
+
+                            String jsonDataFromApi = dataApiHandler.viewAvailableData();
+                    
+                            if (jsonDataFromApi.isEmpty() || jsonDataFromApi.equals("Aucune donnee disponible. Veuillez reessayer apres avoir recu des donnees.")) {
+                                System.out.println("Les donnees JSON sont vides ou null. Veuillez reessayer.");
+                                return;
+                            }
 
                             System.out.println("\nVoulez-vous ajouter un capteur (1) ou un actionneur (2) ?");
                             int appareilType = in.nextInt();
                             in.nextLine();
+                            String typeMesure = "";
+                            String typeAction = "";    
+                            String deviceid = "";
+                            Double temperature = 0.0;
+                            Double humidity = 0.0;
+                            int sound = 0;
+                            Double distance = 0.0;
+                            int photoresistor = 0;
+                            String value = "";
 
                             if (appareilType == 1) {
                                 System.out.println("\nMenu Type de Mesure :");
@@ -85,46 +109,65 @@ public class GestionApp {
                                 int mesureChoice = in.nextInt();
                                 in.nextLine();
                             
-                                String typeMesure = "";
                             
+                            if (!jsonDataFromApi.isEmpty()) {
                                 switch (mesureChoice) {
                                     case 1:
                                         typeMesure = "Temperature";
-                                        temperature = sim.readTemperature();
+                                        JsonObject temperatureData = dataApiHandler.exTempData(jsonDataFromApi);
+                                        if (temperatureData != null) {
+                                            temperature = temperatureData.get("temperature").getAsDouble();
+                                            deviceid = temperatureData.get("deviceid").getAsString();
+                                        }
                                         break;
                                     case 2:
                                         typeMesure = "Humidite";
-                                        humidite = sim.readHumidity();
+                                        JsonObject humidityData = dataApiHandler.extHumData(jsonDataFromApi);
+                                        if (humidityData != null) {
+                                            humidity = humidityData.get("humidity").getAsDouble();
+                                            deviceid = humidityData.get("deviceid").getAsString();
+                                        }
                                         break;
                                     case 3:
                                         typeMesure = "Temperature & Humidite";
-                                        temperature = sim.readTemperature();
-                                        humidite = sim.readHumidity();
+                                        JsonObject temperatureHumidityData = dataApiHandler.extTempHumData(jsonDataFromApi);
+                                        if (temperatureHumidityData != null) {
+                                            temperature = temperatureHumidityData.get("temperature").getAsDouble();
+                                            humidity = temperatureHumidityData.get("humidity").getAsDouble();
+                                            deviceid = temperatureHumidityData.get("deviceid").getAsString();
+                                        }
                                         break;
                                     case 4:
                                         typeMesure = "Son";
-                                        son = sim.readSound();
+                                        JsonObject soundData = dataApiHandler.exSonData(jsonDataFromApi);
+                                        if (soundData != null) {
+                                            sound = soundData.get("sound").getAsInt();
+                                            deviceid = soundData.get("deviceid").getAsString();
+                                        }
                                         break;
 
                                     case 5:
                                         typeMesure = "Distance";
-                                        distance = sim.readDistance();
                                         break;
 
                                     case 6:
                                         typeMesure = "Lumiere";
-                                        lumiere = sim.readLight();
+                                        JsonObject lightData = dataApiHandler.exPhotoData(jsonDataFromApi);
+                                        if (lightData != null) {
+                                            photoresistor = lightData.get("photoresistor").getAsInt();
+                                            deviceid = lightData.get("deviceid").getAsString();
+                                        }
                                         break;
                                     default:
                                         System.out.println("Choix non valide. Veuillez choisir entre 1 a 6.");
                                         return;
                                 }
-                    
+                            }
                                 System.out.println("\n=========================================");
                                 System.out.println("Informations sur le capteur insere");
                                 System.out.println("=========================================");
                     
-                                ObjetConnecte capteur = new Capteur(nom, deviceid, type, typeMesure, temperature, humidite, son, distance, lumiere, formattedDate, formattedTime, status);
+                                ObjetConnecte capteur = new Capteur(nom, deviceid, type, typeMesure, temperature, humidity, sound, distance, photoresistor, formattedDate, formattedTime, status, value);
                                 capteur.capteurInfo();
                                 ((Capteur) capteur).mesurer(sim);
                                 dataStack.push(capteur);
@@ -141,15 +184,21 @@ public class GestionApp {
                                 
                                 int actionChoice = in.nextInt();
                                 in.nextLine();
-                                
-                                String typeAction = "";
-                                
+                                                         
                                 switch (actionChoice) {
                                     case 1:
                                         typeAction = "Allumer / Eteindre";
+                                        JsonObject ledStatus = dataApiHandler.exLedStatus(jsonDataFromApi);
+                                        if (ledStatus != null) {
+                                            value = ledStatus.get("led").getAsString();
+                                        }
                                         break;
                                     case 2:
                                         typeAction = "Ouvrir / Fermer";
+                                        JsonObject relayStatus = dataApiHandler.exRelayStatus(jsonDataFromApi);
+                                        if (relayStatus != null) {
+                                            value = relayStatus.get("relay").getAsString();
+                                        }
                                         break;
                                     case 3:
                                         typeAction = "Augmenter / Diminuer";
@@ -172,7 +221,7 @@ public class GestionApp {
                                 System.out.println("Informations sur l'actionneur insere");
                                 System.out.println("=========================================");
 
-                                ObjetConnecte actuateur = new Actuateur(nom, deviceid, type, typeAction, formattedDate, formattedTime, status);
+                                ObjetConnecte actuateur = new Actuateur(nom, deviceid, type, typeAction, formattedDate, formattedTime, status, value);
                                 actuateur.actionneurInfo();
                                 dataQueue.offer(actuateur);
 
@@ -183,7 +232,7 @@ public class GestionApp {
 
                             break;
 
-                        case 2:
+                        case 3:
                             System.out.println("\n=== Donnees dans le Pile ===");
                             for (ObjetConnecte obj : dataStack) {
                                 if (obj instanceof Capteur) {
@@ -233,21 +282,20 @@ public class GestionApp {
                                 System.out.println(
                                         "Insertion annulee. Les donnees ne sont pas inserees dans la base de donnees.");
                             }
-
-                            break;
-
-                        case 3:
-                            System.out.print("Entrez le nom de l'appareil a supprimer : ");
-
-                            String nomToDelete = in.nextLine();
-                            if (!NomExists.nomExists(nomToDelete)) {
-                                System.out.println("Appareil inexistant. La mise a jour a echoue.");
-                            } else {
-                                CRUD.deleteData(nomToDelete);
-                            }
                             break;
 
                         case 4:
+                            System.out.print("Entrez le nom de l'appareil à supprimer : ");
+                            String nomToDelete = in.nextLine();
+                            if (!NomExists.nomExists(nomToDelete)) {
+                                System.out.println("Appareil inexistant. La suppression a échoué.");
+                            } else {
+                                CRUD.deleteData(nomToDelete);
+                            }
+                            
+                            break;
+
+                        case 5:
                             System.out.println("\nVoulez-vous modifier un capteur (1) ou un actionneur (2) ?");
                             int majChoix = in.nextInt();
                             in.nextLine();
@@ -357,8 +405,8 @@ public class GestionApp {
                                         "Choix non valide. Veuillez choisir 1 (capteur) ou 2 (actionneur).");
                             }
                         break;
-
-                        case 5:
+                            
+                        case 6:
                             System.out.println("\nQuel tableau voulez-vous voir ?");
                             System.out.println("1. Objet Connecte");
                             System.out.println("2. Capteur");
@@ -382,7 +430,7 @@ public class GestionApp {
                             }
                             break;
 
-                        case 6:
+                        case 7:
                             System.out.println("Fin du programme.");
                             System.out.println("");
                             System.exit(0);

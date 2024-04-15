@@ -2,10 +2,12 @@ package com.exercice3;
 import com.exercice2.Conn;
 import com.exercice1.NomExists;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Scanner;
 
 public class CRUD {
 
@@ -174,36 +176,103 @@ public class CRUD {
             e.printStackTrace();
         }
     }
+   
 
     public static void deleteData(String nom) {
         try (Conn conn = new Conn()) {
     
-        if (!NomExists.nomExists(nom)) {
-            System.out.println("Appareil inexistant. La mise a jour a echoue.");
-            return;
-        }
+            if (!NomExists.nomExists(nom)) {
+                System.out.println("Appareil inexistant. La suppression a echoue.");
+                return;
+            }
+    
+            try {
+                String selectQuery = "SELECT * FROM objetconnecte WHERE nom = ?";
+                PreparedStatement selectStatement = conn.connect().prepareStatement(selectQuery);
+                selectStatement.setString(1, nom);
+                ResultSet resultSet = selectStatement.executeQuery();
+    
+                System.out.println("\nLes donnees suivantes vont etre supprimees :");
+                System.out.println("------------------------------------------------------------------------------------------------");
+                System.out.println("| Obj ID | Nom            | Device ID        | Type    | Type Mesure             | Type Action |");
+                System.out.println("------------------------------------------------------------------------------------------------");
+    
+                while (resultSet.next()) {
+                    int objId = resultSet.getInt("objet_id");
+                    String name = resultSet.getString("nom");
+                    String deviceId = resultSet.getString("device_id");
+                    String type = resultSet.getString("type");
+                    String typeMesure = resultSet.getString("typemesure");
+                    String typeAction = resultSet.getString("typeaction");
+    
+                    System.out.printf("| %-6d | %-14s | %-10s | %-6s | %-23s | %-11s |%n",
+                            objId, name, deviceId, type, typeMesure, typeAction);
+                }
+    
+                System.out.println("------------------------------------------------------------------------------------------------");
+    
+                selectStatement.close();
+    
+                Scanner scanner = new Scanner(System.in);
+    
+                String confirmation;
+            do {
+                System.out.print("\nConfirmez-vous la suppression ? (O/N): ");
+                confirmation = scanner.nextLine();
 
-        try {
-            String deleteQuery = "DELETE FROM objetconnecte WHERE nom = ?";
-            PreparedStatement preparedStatement = conn.connect().prepareStatement(deleteQuery);
-            preparedStatement.setString(1, nom);
+                if (confirmation.equalsIgnoreCase("O")) {
+                    int objID;
+                    do {
+                        System.out.print("\nEntrez le objet ID: ");
+                        objID = scanner.nextInt();
 
-            int rowsAffected = preparedStatement.executeUpdate();
+                        if (!isObjectIDValid(conn.connect(), objID)) {
+                            System.out.println("ID d'objet non valide. Veuillez réessayer.");
+                        }
 
-            preparedStatement.close();
+                    } while (!isObjectIDValid(conn.connect(), objID));
 
-            System.out.println("L'appareil a ete supprime avec succes ! ");
-            System.out.println("");
+                    String deleteQuery = "DELETE FROM objetconnecte WHERE objet_id = ?";
+                    try (PreparedStatement preparedStatement = conn.connect().prepareStatement(deleteQuery)) {
+                        preparedStatement.setInt(1, objID);
+                        int rowsAffected = preparedStatement.executeUpdate();
+                        preparedStatement.close();
+                        System.out.println("L'appareil a été supprimé avec succès !");
+                        System.out.println("");
+                    }
+                } else if (!confirmation.equalsIgnoreCase("N")) {
+                    System.out.println("Veuillez entrer une réponse valide (O/N).");
+                } else {
+                    System.out.println("Suppression annulée.");
+                }
+            } while (!confirmation.equalsIgnoreCase("O") && !confirmation.equalsIgnoreCase("N"));
 
+    
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.out.println("Erreur lors de la suppression de l'appareil.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } 
+        }
     }
+    
 
+    public static boolean isObjectIDValid(Connection conn, int objID) throws SQLException {
+        String query = "SELECT COUNT(*) AS count FROM objetconnecte WHERE objet_id = ?";
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setInt(1, objID);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt("count");
+                    return count > 0;
+                }
+            }
+        }
+        return false;
+    }
+    
+    
     public static void readOB() {
         try (Conn conn = new Conn()) {
             try {
