@@ -23,11 +23,21 @@ settime()
 api_endpoint = "http://192.168.5.199:8080/api/data"
 
 photoresistor_pin = 36
+relay_pin = 26  # Pin connected to the relay
 
 device_id = "ce25e9768cfe0061"
 
 def read_photoresistor():
     return machine.ADC(machine.Pin(photoresistor_pin)).read()
+
+def control_relay(photoresistor_value):
+    relay = machine.Pin(relay_pin, machine.Pin.OUT)
+    if photoresistor_value <= 2048:
+        relay.on()
+        return "On"
+    else:
+        relay.off()
+        return "Off"
 
 while True:
     try:
@@ -38,9 +48,13 @@ while True:
         date_str = "{:04d}-{:02d}-{:02d}".format(current_time[0], current_time[1], current_time[2])
         time_str = "{:02d}:{:02d}".format(hour, current_time[4])
 
+        photoresistor_value = read_photoresistor()
+        relay_state = control_relay(photoresistor_value)
+
         data = {
             "deviceid": device_id,
-            "photoresistor": read_photoresistor(),
+            "photoresistor": photoresistor_value,
+            "relay": relay_state,
             "date": date_str,
             "time": time_str
         }

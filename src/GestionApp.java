@@ -87,12 +87,14 @@ public class GestionApp {
                             int appareilType = in.nextInt();
                             in.nextLine();
                             String typeMesure = "";
+                            String typeAction = "";    
+                            String deviceid = "";
                             Double temperature = 0.0;
                             Double humidity = 0.0;
                             int sound = 0;
                             Double distance = 0.0;
                             int photoresistor = 0;
-                            String deviceid = "";
+                            String value = "";
 
                             if (appareilType == 1) {
                                 System.out.println("\nMenu Type de Mesure :");
@@ -165,7 +167,7 @@ public class GestionApp {
                                 System.out.println("Informations sur le capteur insere");
                                 System.out.println("=========================================");
                     
-                                ObjetConnecte capteur = new Capteur(nom, deviceid, type, typeMesure, temperature, humidity, sound, distance, photoresistor, formattedDate, formattedTime, status);
+                                ObjetConnecte capteur = new Capteur(nom, deviceid, type, typeMesure, temperature, humidity, sound, distance, photoresistor, formattedDate, formattedTime, status, value);
                                 capteur.capteurInfo();
                                 ((Capteur) capteur).mesurer(sim);
                                 dataStack.push(capteur);
@@ -182,15 +184,21 @@ public class GestionApp {
                                 
                                 int actionChoice = in.nextInt();
                                 in.nextLine();
-                                
-                                String typeAction = "";
-                                
+                                                         
                                 switch (actionChoice) {
                                     case 1:
                                         typeAction = "Allumer / Eteindre";
+                                        JsonObject ledStatus = dataApiHandler.exLedStatus(jsonDataFromApi);
+                                        if (ledStatus != null) {
+                                            value = ledStatus.get("led").getAsString();
+                                        }
                                         break;
                                     case 2:
                                         typeAction = "Ouvrir / Fermer";
+                                        JsonObject relayStatus = dataApiHandler.exRelayStatus(jsonDataFromApi);
+                                        if (relayStatus != null) {
+                                            value = relayStatus.get("relay").getAsString();
+                                        }
                                         break;
                                     case 3:
                                         typeAction = "Augmenter / Diminuer";
@@ -213,7 +221,7 @@ public class GestionApp {
                                 System.out.println("Informations sur l'actionneur insere");
                                 System.out.println("=========================================");
 
-                                ObjetConnecte actuateur = new Actuateur(nom, deviceid, type, typeAction, formattedDate, formattedTime, status);
+                                ObjetConnecte actuateur = new Actuateur(nom, deviceid, type, typeAction, formattedDate, formattedTime, status, value);
                                 actuateur.actionneurInfo();
                                 dataQueue.offer(actuateur);
 
@@ -286,7 +294,6 @@ public class GestionApp {
                             }
                             
                             break;
-                            
 
                         case 5:
                             System.out.println("\nVoulez-vous modifier un capteur (1) ou un actionneur (2) ?");
@@ -398,7 +405,7 @@ public class GestionApp {
                                         "Choix non valide. Veuillez choisir 1 (capteur) ou 2 (actionneur).");
                             }
                         break;
-
+                            
                         case 6:
                             System.out.println("\nQuel tableau voulez-vous voir ?");
                             System.out.println("1. Objet Connecte");

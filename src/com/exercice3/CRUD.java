@@ -176,6 +176,7 @@ public class CRUD {
             e.printStackTrace();
         }
     }
+   
 
     public static void deleteData(String nom) {
         try (Conn conn = new Conn()) {

@@ -175,6 +175,40 @@ public class DataApiHandler implements HttpHandler {
 
         return null;
     }
+    
+    public JsonObject exLedStatus(String jsonData) {
+        String[] jsonObjects = jsonData.split("\n");
+
+        for (String jsonObjectString : jsonObjects) {
+            try {
+                JsonObject jsonObject = JsonParser.parseString(jsonObjectString).getAsJsonObject();
+                if (jsonObject.has("led")) {
+                    return jsonObject;
+                }
+            } catch (JsonSyntaxException e) {
+                System.err.println("JSON mal forme: " + jsonObjectString);
+            }
+        }
+
+        return null;
+    }
+    
+    public JsonObject exRelayStatus(String jsonData) {
+        String[] jsonObjects = jsonData.split("\n");
+
+        for (String jsonObjectString : jsonObjects) {
+            try {
+                JsonObject jsonObject = JsonParser.parseString(jsonObjectString).getAsJsonObject();
+                if (jsonObject.has("relay")) {
+                    return jsonObject;
+                }
+            } catch (JsonSyntaxException e) {
+                System.err.println("JSON mal forme: " + jsonObjectString);
+            }
+        }
+
+        return null;
+    }
 
     public void scheduleDatabaseUpdate() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);

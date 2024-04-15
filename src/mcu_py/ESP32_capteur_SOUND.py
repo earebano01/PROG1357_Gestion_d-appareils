@@ -23,11 +23,21 @@ settime()
 api_endpoint = "http://192.168.5.199:8080/api/data"
 
 analog_sound_sensor_pin = 36
+led_pin = 26  # Pin connected to the LED
 
 device_id = "fa81efab546fde6e"
 
 def read_analog_sound_sensor():
     return machine.ADC(machine.Pin(analog_sound_sensor_pin)).read()
+
+def control_led(sound_value):
+    led = machine.Pin(led_pin, machine.Pin.OUT)
+    if sound_value > 1000:
+        led.on()
+        return "On"
+    else:
+        led.off()
+        return "Off"
 
 while True:
     try:
@@ -39,10 +49,12 @@ while True:
         time_str = "{:02d}:{:02d}".format(hour, current_time[4])
 
         sound_sensor_value = read_analog_sound_sensor()
+        led_state = control_led(sound_sensor_value)
 
         data = {
             "deviceid": device_id,
             "sound": sound_sensor_value,
+            "led": led_state,
             "date": date_str,
             "time": time_str
         }
@@ -57,4 +69,4 @@ while True:
     except Exception as e:
         print("Error:", e)
 
-    time.sleep(10) 
+    time.sleep(10)
